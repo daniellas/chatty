@@ -1,0 +1,27 @@
+(function() {
+    'use strict';
+
+    var app = angular.module('chatty', [ 'ngAnimate', 'ui.router', 'ui.bootstrap', 'restangular', 'chatty.spin', 'chatty.validation', 'chatty.security',
+            'chatty.navbar', 'chatty.login', 'chatty.chat' ]);
+
+    app.config([ '$stateProvider', '$urlRouterProvider', '$qProvider', Routing ]);
+    app.config([ 'RestangularProvider', RestangularConfig ]);
+    app.controller('MasterCtrl', [ '$scope', Controller ])
+
+    function Routing($stateProvider, $urlRouterProvider, $qProvider) {
+        $qProvider.errorOnUnhandledRejections(false);
+        $urlRouterProvider.otherwise('/');
+
+    }
+
+    function RestangularConfig(RestangularProvider) {
+        RestangularProvider.setDefaultHeaders({
+            'Content-Type' : 'application/json;charset=utf-8'
+        }).setFullResponse(true);
+    }
+
+    function Controller($scope) {
+        $scope.centerColumnCls = 'col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4';
+    }
+
+})();

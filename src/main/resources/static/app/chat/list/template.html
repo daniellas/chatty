@@ -1,0 +1,33 @@
+<div>
+    <div class="page-header page-header-chatty hidden-xs">
+        <h1>Chats</h1>
+    </div>
+    <div class="page-header page-header-chatty visible-xs">
+        <h2>Chats</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <button class="btn btn-success">
+                    <i class="fa fa-plus"></i>
+                    Create chat
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-group">
+                <div class="list-group-item" ng-repeat="item in chats">
+                    <h3 class="list-group-item-heading">{{item.title}}</h3>
+                    <p>
+                        Created on <strong>{{item.createDate}}</strong> by <strong>{{item.createdBy}}</strong>
+                    </p>
+                    <p>
+                        <a href="">Open</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

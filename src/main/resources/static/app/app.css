@@ -1,0 +1,11 @@
+.spinner {
+	margin-top: 50px
+}
+
+.page-header-chatty {
+	margin-top: 0;
+}
+
+.page-header-chatty h1, .page-header-chatty h2 {
+	margin-top: 10px;
+}

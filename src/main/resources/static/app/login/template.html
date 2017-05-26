@@ -1,0 +1,28 @@
+<div class="text-center">
+    <div class="jumbotron">
+        <h1>Welcome to Serve You Inc.</h1>
+        <p>Please sign into our Chatty application</p>
+    </div>
+    <div class="row">
+        <div ng-class="centerColumnCls">
+            <form novalidate="novalidate">
+                <div class="form-group">
+                    <input class="form-control input-lg text-center" placeholder="Enter your username" required btr-validation
+                        ng-model="username">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control input-lg text-center" placeholder="Enter your password" required
+                        btr-validation ng-model="password">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div ng-class="centerColumnCls">
+            <button class="btn btn-success btn-lg" ng-click="login(username,password)">
+                <i class="fa fa-sign-in"></i>
+                Sign in
+            </button>
+        </div>
+    </div>
+</div>
