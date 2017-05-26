@@ -21,7 +21,6 @@
     }
 
     function Controller($scope) {
-        $scope.centerColumnCls = 'col-md-6 col-md-offset-3';
     }
 
 })();
