@@ -1,0 +1,70 @@
+<div>
+    <div class="page-header page-header-chatty">
+        <h1>
+            <button class="btn btn-default" title="Go to chats list" ui-sref="chat/list">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+            Chat - {{chatTitle(chat)}}
+        </h1>
+    </div>
+    <div class="row" ng-if="!chat.id">
+        <div class="col-md-12">
+            <form name="frm">
+                <div class="form-group">
+                    <p class="help-block">
+                        Describe an issue and press <strong>Create</strong> button
+                    </p>
+                    <input class="form-control input-lg" ng-model="chat.title" placeholder="Enter chat title with issue description"
+                        required btr-validation>
+                </div>
+                <div class="form-group chatty-form-buttons">
+                    <button class="btn btn-success btn-lg" ng-disabled="frm.$invalid" ng-click="createChat(chat)">
+                        <i class="fa fa-plus"></i>
+                        Create chat
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div ng-if="chat.id">
+        <div class="row">
+            <div class="col-md-12">
+                <fieldset>
+                    <legend>
+                        Created <strong>{{chat.createDate}}</strong> by <strong>{{chat.createdBy}}</strong>
+                    </legend>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chatty-message-list" id="messages">
+                    <div uib-alert class="alert-warning text-center" ng-if="!messages.length">
+                        <strong>There are no messages in this chat</strong>
+                    </div>
+                    <div class="list-group" ng-if="messages.length">
+                        <div class="list-group-item" ng-repeat="item in messages">
+                            <p>
+                                <strong>{{item.sentTs | date:'EEEE d LLLL HH:mm:ss'}}</strong> from <strong>{{item.from}}</strong>
+                            </p>
+                            <p>{{item.message}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group input-group-lg">
+                    <input class="form-control input-lg" placeholder="Type your message and press enter to send ..."
+                        ng-model="message.content" ng-keypress="sendMessageByKey($event,message)">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" title="Send message" ng-click="sendMessage(message)" ng-disabled="!message.content">
+                            <i class="fa fa-envelope"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

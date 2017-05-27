@@ -51,6 +51,17 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
@@ -93,6 +104,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <dependency>
@@ -150,26 +165,26 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.scalatest</groupId>
-                <artifactId>scalatest-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>test</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- <plugin> -->
+            <!-- <groupId>org.scalatest</groupId> -->
+            <!-- <artifactId>scalatest-maven-plugin</artifactId> -->
+            <!-- <version>1.0</version> -->
+            <!-- <executions> -->
+            <!-- <execution> -->
+            <!-- <id>test</id> -->
+            <!-- <goals> -->
+            <!-- <goal>test</goal> -->
+            <!-- </goals> -->
+            <!-- </execution> -->
+            <!-- </executions> -->
+            <!-- </plugin> -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.4.201502262128</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*TestBase.*</exclude>
+                        <!-- <exclude>**/ChattyApp.*</exclude> -->
                     </excludes>
                 </configuration>
                 <executions>
@@ -202,25 +217,25 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                        <configuration>
-                            <displayCmd>false</displayCmd>
-                            <args>
-                                <arg>-dependencyfile</arg>
-                                <arg>${project.build.directory}/.scala_dependencies</arg>
-                            </args>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- <plugin> -->
+            <!-- <groupId>net.alchim31.maven</groupId> -->
+            <!-- <artifactId>scala-maven-plugin</artifactId> -->
+            <!-- <version>3.2.2</version> -->
+            <!-- <executions> -->
+            <!-- <execution> -->
+            <!-- <goals> -->
+            <!-- <goal>testCompile</goal> -->
+            <!-- </goals> -->
+            <!-- <configuration> -->
+            <!-- <displayCmd>false</displayCmd> -->
+            <!-- <args> -->
+            <!-- <arg>-dependencyfile</arg> -->
+            <!-- <arg>${project.build.directory}/.scala_dependencies</arg> -->
+            <!-- </args> -->
+            <!-- </configuration> -->
+            <!-- </execution> -->
+            <!-- </executions> -->
+            <!-- </plugin> -->
         </plugins>
 
     </build>
@@ -236,7 +251,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.19.1</version>
+                        <!-- <version>2.19.1</version> -->
                         <configuration>
                             <includes>
                                 <include>**/*ITest.java</include>

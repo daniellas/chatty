@@ -1,3 +1,9 @@
 logging:
   level:
     root: INFO
+chatty:
+  security:
+    customerUsername: customer
+    customerPassword: password
+    employeeUsername: employee
+    employeePassword: password

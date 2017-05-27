@@ -3,24 +3,57 @@
 
     var mod = angular.module('chatty.security');
 
-    mod.service('SecuritySrv', [ '$rootScope', '$state', Service ]);
+    mod.service('SecuritySrv', [ '$rootScope', '$state', 'RestSrv', 'AlertSrv', Service ]);
 
-    function Service($rootScope, $state) {
+    function setAuthenticated($rootScope, authenticated) {
+        $rootScope.authenticated = authenticated;
+    }
+
+    function setUserDetails($rootScope, userDetails) {
+        $rootScope.userDetails = userDetails;
+    }
+
+    function Service($rootScope, $state, RestSrv, AlertSrv) {
 
         this.login = function(username, password) {
-            $rootScope.authenticated = true;
-            $state.go('chat/list');
+            RestSrv.all('sec/login').customPOST({
+                username : username,
+                password : password
+            }).then(function(response) {
+                setAuthenticated($rootScope, true);
+                setUserDetails($rootScope,response.data.plain());
+                $state.go('chat/list');
+                AlertSrv.showSuccess('You are signed in');
+            }, function() {
+                $rootScope.authenticated = false;
+                $rootScope.userDetails = null;
+            });
         };
 
         this.logout = function() {
-            $rootScope.authenticated = false;
-            $state.go('login');
+            RestSrv.all('sec/logout').customPOST().then(function(response) {
+                setAuthenticated($rootScope, false);
+                $state.go('login');
+                AlertSrv.showSuccess('You are signed out');
+            });
+        };
+
+        this.userDetails = function() {
+            return RestSrv.all('sec/userdetails').customPOST();
         };
 
         this.isAuthenticated = function() {
-            $rootScope.authenticated = true;
             return $rootScope.authenticated;
         };
+
+        this.setAuthenticated = function(authenticated) {
+            setAuthenticated($rootScope, authenticated);
+        };
+
+        this.setUserDetails = function(userDetails) {
+            setUserDetails($rootScope, userDetails);
+        };
+
     }
 
 })();

@@ -9,12 +9,16 @@
             </button>
         </div>
         <div class="collapse navbar-collapse" uib-collapse="collapse">
-            <div class="nav navbar-nav navbar-right">
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <label class="control-label">Hi: </label>
+                    {{userDetails.username}}
+                </div>
                 <button class="btn btn-default navbar-btn" ng-click="logout()">
                     <i class="fa fa-sign-out"></i>
-                    Sign off
+                    Sign out
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 </nav>

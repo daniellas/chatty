@@ -9,3 +9,13 @@
 .page-header-chatty h1, .page-header-chatty h2 {
 	margin-top: 10px;
 }
+
+.chatty-form-buttons {
+	text-align: center;
+}
+
+.chatty-message-list {
+	height: 300px;
+	max-height: 300px;
+	overflow: auto;
+}

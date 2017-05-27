@@ -4,7 +4,7 @@
     var mod = angular.module('chatty.spin', []);
 
     mod.service('SpinSrv', [ '$timeout', Service ]);
-    mod.service('SpinInterceptor', [ '$q', '$rootScope', 'SpinSrv', SpinInterceptor ]);
+    mod.service('SpinInterceptor', [ '$q', 'SpinSrv', SpinInterceptor ]);
     mod.config([ '$httpProvider', HttpConfig ]);
 
     function Service($timeout) {
@@ -23,7 +23,7 @@
         };
     }
 
-    function SpinInterceptor($q, $rootScope, SpinSrv) {
+    function SpinInterceptor($q, SpinSrv) {
         this.request = function(config) {
             SpinSrv.start();
 

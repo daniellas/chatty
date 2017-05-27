@@ -1,12 +1,13 @@
 (function() {
     'use strict';
 
-    var app = angular.module('chatty', [ 'ngAnimate', 'ui.router', 'ui.bootstrap', 'restangular', 'chatty.spin', 'chatty.validation', 'chatty.security',
-            'chatty.navbar', 'chatty.login', 'chatty.chat' ]);
+    var app = angular.module('chatty', [ 'ngAnimate', 'toaster', 'ui.router', 'ui.bootstrap', 'restangular', 'chatty.spin', 'chatty.validation',
+            'chatty.alert', 'chatty.security', 'chatty.navbar', 'chatty.login', 'chatty.stomp', 'chatty.chat' ]);
 
     app.config([ '$stateProvider', '$urlRouterProvider', '$qProvider', Routing ]);
     app.config([ 'RestangularProvider', RestangularConfig ]);
     app.controller('MasterCtrl', [ '$scope', Controller ])
+    app.service('RestSrv', [ 'Restangular', RestSrv ]);
 
     function Routing($stateProvider, $urlRouterProvider, $qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
@@ -21,6 +22,11 @@
     }
 
     function Controller($scope) {
+    }
+
+    function RestSrv(Restangular) {
+        return Restangular.withConfig(function(RestangularConfigurer) {
+        });
     }
 
 })();
