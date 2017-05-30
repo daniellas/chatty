@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var app = angular.module('chatty', [ 'ngAnimate', 'toaster', 'ui.router', 'ui.bootstrap', 'restangular', 'chatty.spin', 'chatty.validation',
+    var app = angular.module('chatty', [ 'ngAnimate', 'toaster', 'ui.router', 'ui.bootstrap', 'restangular', 'chatty.spin', 'chatty.validation', 'chatty.date',
             'chatty.alert', 'chatty.security', 'chatty.navbar', 'chatty.login', 'chatty.stomp', 'chatty.chat' ]);
 
     app.config([ '$stateProvider', '$urlRouterProvider', '$qProvider', Routing ]);

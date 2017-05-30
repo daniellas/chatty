@@ -1,10 +1,10 @@
-<div>
+<div ng-if="initialized">
     <div class="page-header page-header-chatty">
         <h1>
-            <button class="btn btn-default" title="Go to chats list" ui-sref="chat/list">
+            <button class="btn btn-default hidden-xs" title="Go to chats list" ui-sref="chat/list">
                 <i class="fa fa-chevron-left"></i>
             </button>
-            Chat - {{chatTitle(chat)}}
+            {{chatTitle(chat)}}
         </h1>
     </div>
     <div class="row" ng-if="!chat.id">
@@ -29,25 +29,16 @@
     <div ng-if="chat.id">
         <div class="row">
             <div class="col-md-12">
-                <fieldset>
-                    <legend>
-                        Created <strong>{{chat.createDate}}</strong> by <strong>{{chat.createdBy}}</strong>
-                    </legend>
-                </fieldset>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
                 <div class="chatty-message-list" id="messages">
                     <div uib-alert class="alert-warning text-center" ng-if="!messages.length">
                         <strong>There are no messages in this chat</strong>
                     </div>
                     <div class="list-group" ng-if="messages.length">
                         <div class="list-group-item" ng-repeat="item in messages">
-                            <p>
-                                <strong>{{item.sentTs | date:'EEEE d LLLL HH:mm:ss'}}</strong> from <strong>{{item.from}}</strong>
-                            </p>
                             <p>{{item.message}}</p>
+                            <p>
+                                <strong>{{item.sentTs | chattyFullDate}}</strong> from <strong>{{item.from}}</strong>
+                            </p>
                         </div>
                     </div>
                 </div>

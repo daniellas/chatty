@@ -1,25 +1,30 @@
 <div class="text-center">
     <div class="jumbotron">
-        <h1>I'm Chatty</h1>
-        <p>Please sign in</p>
+        <h1>
+            <i class="fa fa-comment text-success"></i>
+            Chatty
+        </h1>
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form novalidate="novalidate">
-                <div class="form-group">
-                    <input class="form-control input-lg text-center" placeholder="Enter your username" required btr-validation
-                        ng-model="username">
-                </div>
-                <p class="help-block">
-                    Enter <strong>customer</strong> or <strong>employee</strong> as username
-                </p>
-                <div class="form-group">
-                    <input type="password" class="form-control input-lg text-center" placeholder="Enter your password" required
-                        btr-validation ng-model="password">
-                </div>
-                <p class="help-block">
-                    Use <strong>password</strong> as password
-                </p>
+                <fieldset>
+                    <legend>Please sing in</legend>
+                    <div class="form-group">
+                        <input class="form-control input-lg text-center" placeholder="Enter your username" required btr-validation
+                            ng-model="username">
+                    </div>
+                    <p class="help-block">
+                        Enter <strong>customer</strong> or <strong>employee</strong> as username
+                    </p>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-lg text-center" placeholder="Enter your password" required
+                            btr-validation ng-model="password">
+                    </div>
+                    <p class="help-block">
+                        Use <strong>password</strong> as password
+                    </p>
+                </fieldset>
             </form>
         </div>
     </div>

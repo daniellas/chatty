@@ -8,6 +8,7 @@
     function Service($q) {
         var socket;
         var stompClient;
+        var subscription;
 
         this.subscribe = function(url, channel, handler) {
             return $q(function(resolve, reject) {
@@ -15,7 +16,7 @@
                 stompClient = Stomp.over(socket);
 
                 stompClient.connect(url, function() {
-                    var subscription = stompClient.subscribe(channel, function(data) {
+                    subscription = stompClient.subscribe(channel, function(data) {
                         handler(angular.fromJson(data.body));
                     });
                     resolve(subscription);
@@ -23,6 +24,12 @@
                     reject();
                 });
             });
+        };
+        
+        this.unsubscribe = function() {
+            if (subscription) {
+                subscription.unsubscribe();
+            }
         };
 
         this.send = function(channel, message) {

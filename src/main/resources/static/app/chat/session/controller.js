@@ -3,9 +3,9 @@
 
     var mod = angular.module('chatty.chat');
 
-    mod.controller('ChatSessionCtrl', [ '$scope', '$stateParams', '$state', '$document', '$timeout', 'MessengerSrv', Controller ]);
+    mod.controller('ChatSessionCtrl', [ '$scope', '$stateParams', '$state', '$document', '$timeout', 'ChatClientSrv', 'RestSrv', Controller ]);
 
-    function Controller($scope, $stateParams, $state, $document, $timeout, MessengerSrv) {
+    function Controller($scope, $stateParams, $state, $document, $timeout, ChatClientSrv, RestSrv) {
 
         function scrollBottom() {
             $timeout(function() {
@@ -26,27 +26,27 @@
         $scope.messages = [];
 
         if ($stateParams.id) {
-            $scope.chat = {
-                id : '1',
-                createdBy : 'daniel',
-                createDate : '2017-01-01 12:00:01',
-                title : 'Conversation 1'
-            };
-            MessengerSrv.joinChat($stateParams.id, onMessage).then(function() {
-                console.log('Joined chat ' + $stateParams.id);
-            }, function() {
+            RestSrv.one('chats', $stateParams.id).get().then(function(response) {
+                $scope.chat = response.data;
+
+                ChatClientSrv.joinChat($stateParams.id, onMessage).then(function() {
+                    $scope.initialized = true;
+                    $scope.$on('$destroy', function() {
+                        ChatClientSrv.leaveChat($stateParams.id);
+                    });
+                }, function() {
+                });
             });
         } else {
             $scope.chat = {};
+            $scope.initialized = true;
         }
 
-        $scope.message = {
-            content : 'Test'
-        };
+        $scope.message = {};
 
         $scope.sendMessage = function(message) {
             if (message && message.content) {
-                MessengerSrv.sendMessage($stateParams.id, message.content);
+                ChatClientSrv.sendMessage($stateParams.id, message.content);
                 message.content = null;
             }
         };
@@ -58,16 +58,18 @@
         };
 
         $scope.chatTitle = function(chat) {
-            if (chat.id) {
+            if (chat && chat.id) {
                 return chat.title;
             }
 
             return 'New chat';
         };
 
-        $scope.createChat = function(chat) {
-            $state.go('chat/open', {
-                id : 1
+        $scope.createChat = function(title) {
+            RestSrv.all('chats').customPOST(title).then(function(response) {
+                $state.go('chat/open', {
+                    id : response.data.id
+                });
             });
         };
 

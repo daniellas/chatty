@@ -1,4 +1,4 @@
-package dl.chatty.chat.protocol;
+package dl.chatty.chat.entity;
 
 import java.util.Date;
 
@@ -7,9 +7,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(staticName = "of")
 @Data
-public class ChatMessage {
-    private final String id;
-    private final String from;
+public class Message {
     private final String message;
-    private final Date sentTs;
+    private final String from;
+    private final Date createTs;
 }

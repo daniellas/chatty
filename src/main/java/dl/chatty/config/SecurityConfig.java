@@ -25,7 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dl.chatty.config.properties.SecurityProperties;
 import dl.chatty.security.AngularUsernamePasswordAuthenticationFilter;
+import dl.chatty.security.CurrentUsernameSupplier;
 import dl.chatty.security.Roles;
+import dl.chatty.security.SecurityContextCurrentUsernameSupplier;
 import dl.chatty.security.UserDetailsController;
 import dl.chatty.security.UserDetailsView;
 
@@ -50,20 +52,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        configureReuestsSecurity(http);
+        configureLoginFilter(http);
+        configureLogout(http);
+        configureCsrf(http);
+    }
+
+    private void configureReuestsSecurity(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/", "/index.html", "/app/**", LOGIN_URL).permitAll()
                 .anyRequest()
                 .authenticated();
+    }
 
+    private void configureLoginFilter(HttpSecurity http) {
         http.addFilterAfter(
                 new AngularUsernamePasswordAuthenticationFilter(LOGIN_URL, authenticationManager, mapper),
                 UsernamePasswordAuthenticationFilter.class);
 
+    }
+
+    private void configureLogout(HttpSecurity http) throws Exception {
         http.logout()
                 .logoutUrl(LOGOUT_URL)
                 .logoutSuccessHandler((request, response, authentication) -> {
                 });
+    }
 
+    private void configureCsrf(HttpSecurity http) throws Exception {
         // TODO Enable and support on UI side
         http.csrf().disable();
     }
@@ -78,6 +94,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return (request, response, authentication) -> {
             mapper.writeValue(response.getOutputStream(), UserDetailsView.of(authentication));
         };
+    }
+
+    @Bean
+    public CurrentUsernameSupplier currentusernameSupplier() {
+        return new SecurityContextCurrentUsernameSupplier();
     }
 
     private Collection<UserDetails> testUsers() {

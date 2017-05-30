@@ -1,39 +1,41 @@
 <div>
-    <div class="page-header page-header-chatty">
+    <div class="page-header page-header-chatty hidden-xs">
         <h1>Chats</h1>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <button class="btn btn-success" ui-sref="chat/create">
-                    <i class="fa fa-plus"></i>
-                    Create chat
-                </button>
+    <div ng-if="initialized">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button class="btn btn-success" ui-sref="chat/create">
+                        <i class="fa fa-plus"></i>
+                        Create chat
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="list-group">
-                <div uib-alert class="alert-warning text-center" ng-if="!chats.length">
-                    <p>
-                        <strong>There are no chats</strong>
-                    </p>
-                    <p>
-                        <button class="btn btn-success" ui-sref="chat/create">
-                            <i class="fa fa-plus"></i>
-                            Create chat
-                        </button>
-                    </p>
-                </div>
-                <div class="list-group-item" ng-repeat="item in chats" ng-if="chats.length">
-                    <h3 class="list-group-item-heading">{{item.title}}</h3>
-                    <p>
-                        Created <strong>{{item.createDate}}</strong> by <strong>{{item.createdBy}}</strong>
-                    </p>
-                    <p>
-                        <a href="" ui-sref="chat/open({id:item.id})">Open</a>
-                    </p>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-group">
+                    <div uib-alert class="alert-warning text-center" ng-if="!chats.length">
+                        <p>
+                            <strong>There are no chats</strong>
+                        </p>
+                        <p>
+                            <button class="btn btn-success" ui-sref="chat/create">
+                                <i class="fa fa-plus"></i>
+                                Create chat
+                            </button>
+                        </p>
+                    </div>
+                    <div class="list-group-item" ng-repeat="item in chats" ng-if="chats.length">
+                        <h3 class="list-group-item-heading">{{item.title}}</h3>
+                        <p>
+                            Created <strong>{{item.createTs | chattyFullDate}}</strong> by <strong>{{item.createdBy}}</strong>
+                        </p>
+                        <p>
+                            <a href="" ui-sref="chat/open({id:item.id})">Open</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

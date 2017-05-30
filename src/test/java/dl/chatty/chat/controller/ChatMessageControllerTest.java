@@ -1,5 +1,7 @@
 package dl.chatty.chat.controller;
 
+import java.security.Principal;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,7 +15,7 @@ import dl.chatty.chat.broker.Broker;
 public class ChatMessageControllerTest {
 
     @Mock
-    private Broker<String, String> broker;
+    private Broker<String, String, Principal> broker;
 
     @InjectMocks
     private ChatMessageController controller;
@@ -22,6 +24,6 @@ public class ChatMessageControllerTest {
     public void shouldDispatchMessage() {
         controller.handleMessage("msg", "id", null);
 
-        Mockito.verify(broker).dispatch("id", "msg", null);
+        Mockito.verify(broker).onSend("id", "msg", null);
     }
 }

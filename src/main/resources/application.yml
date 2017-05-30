@@ -1,9 +1,17 @@
-logging:
-  level:
-    root: INFO
 chatty:
   security:
     customerUsername: customer
     customerPassword: password
     employeeUsername: employee
     employeePassword: password
+  repository:
+    file:
+      rootPath: repository
+
+logging:
+  level:
+    root: INFO
+
+endpoints:
+  jmx:
+    enabled: true

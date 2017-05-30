@@ -6,7 +6,10 @@ import java.util.Optional;
 import dl.chatty.chat.entity.Chat;
 
 public interface ChatRepository {
-    Collection<Chat> findAll();
+
+    Optional<Chat> create(Chat chat, String creator);
+
+    Collection<Chat> findAll(String creator);
 
     Optional<Chat> getOne(String id);
 }
