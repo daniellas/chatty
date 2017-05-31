@@ -94,7 +94,7 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
         }
 
         public static boolean isValid(SearchItem item) {
-            return item.getSegmentsCount() == 2;
+            return item.segmentsCount == 2;
         }
     }
 
