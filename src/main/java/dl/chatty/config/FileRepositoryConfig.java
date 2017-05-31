@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 import dl.chatty.chat.repository.ChatRepository;
 import dl.chatty.chat.repository.FileChatRepository;
+import dl.chatty.chat.repository.FileMessageRepository;
+import dl.chatty.chat.repository.MessageRepository;
 import dl.chatty.config.properties.FileRepositoryProperties;
 import dl.chatty.id.IdSupplier;
 import dl.chatty.id.UUIDIdSupplier;
@@ -22,5 +24,10 @@ public class FileRepositoryConfig {
     @Bean
     public ChatRepository fileChatRepository(FileRepositoryProperties props, IdSupplier<String> idSupplier) {
         return new FileChatRepository(props.getRootPath(), idSupplier);
+    }
+
+    @Bean
+    public MessageRepository fileMessageRepository(IdSupplier<String> idSupplier, FileChatRepository chatRepo) {
+        return new FileMessageRepository(idSupplier, chatRepo::chatFolderAbsolutePath, FileChatRepository.TITLE_FILE_NAME);
     }
 }

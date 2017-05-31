@@ -2,12 +2,12 @@ package dl.chatty.chat.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(staticName = "of", onConstructor = @__({ @JsonCreator }))
+@RequiredArgsConstructor(staticName = "of")
+@EqualsAndHashCode(of = { "id" })
 @Data
 public class Chat {
     private final String id;

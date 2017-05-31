@@ -12,16 +12,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import dl.chatty.chat.broker.Broker;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ChatMessageControllerTest {
+public class ChatMessagingControllerTest {
 
     @Mock
     private Broker<String, String, Principal> broker;
 
     @InjectMocks
-    private ChatMessageController controller;
+    private ChatMessagingController controller;
 
     @Test
-    public void shouldDispatchMessage() {
+    public void shouldSendMessage() {
         controller.handleMessage("msg", "id", null);
 
         Mockito.verify(broker).onSend("id", "msg", null);

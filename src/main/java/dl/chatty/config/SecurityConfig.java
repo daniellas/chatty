@@ -108,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .roles(Roles.CUSTOMER).build(),
                 User.withUsername(securityProperties.getEmployeeUsername())
                         .password(securityProperties.getEmployeePassword())
-                        .roles(Roles.CUSTOMER).build())
+                        .roles(Roles.EMPLOYEE).build())
                 .collect(Collectors.toList());
     }
 }

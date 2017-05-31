@@ -8,15 +8,16 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.InitializingBean;
 
 import dl.chatty.chat.entity.Chat;
-import dl.chatty.id.IdSupplier;
-import io.atlassian.fugue.Pair;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,38 +27,29 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
 
     private static final String CHAT_FOLDER_SEGMENT_SEPARATOR = "_";
 
-    private static final String TITLE_FILE_NAME = "title";
+    public static final String TITLE_FILE_NAME = "title";
 
     private final String rootPath;
 
-    private final IdSupplier<String> idSupplier;
+    private final Supplier<String> chatIdSupplier;
 
     @Override
-    public Optional<Chat> create(Chat chat, String creator) {
-        String id = idSupplier.get();
+    public Optional<Chat> create(Chat sourceChat, String creator) {
+        String chatId = chatIdSupplier.get();
 
-        return path(chatFolder(id, creator))
+        return path(chatFolderPath(chatId, creator))
                 .andThen(mkdir())
-                .apply(rootPath)
-                .flatMap(dir -> {
-                    return append(TITLE_FILE_NAME)
-                            .andThen(mkfile())
-                            .andThen(flatWrite(chat.getTitle()))
-                            .apply(dir)
-                            .map(t -> {
-                                return Chat.of(
-                                        id,
-                                        chat.getTitle(),
-                                        creator,
-                                        creationTime().apply(dir).get());
-                            });
-                });
+                .andThen(appendIfPresent(TITLE_FILE_NAME))
+                .andThen(mkfileIfPresent())
+                .andThen(writeIfPresent(sourceChat.getTitle()))
+                .andThen(createChatIfFilesPresent(chatId, sourceChat.getTitle(), creator))
+                .apply(rootPath);
     }
 
     @Override
     public Collection<Chat> findAll(String creator) {
         return filteredStream(optionalFolderCreatorPredicate(creator))
-                .sorted(byCreateTs())
+                .sorted(byCreateTs().reversed())
                 .collect(Collectors.toList());
     }
 
@@ -71,48 +63,70 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
         return findFiles(predicate)
                 .apply(rootPath)
                 .parallel()
-                .map(this::toSearchPair)
-                .filter(this::hasTwoSegments)
+                .map(SearchItem::of)
+                .filter(SearchItem::isValid)
                 .map(this::toChat);
     }
 
     private Predicate<Path> optionalFolderCreatorPredicate(String creator) {
         return Optional.ofNullable(creator)
                 .filter(c -> !"".equals(c))
-                .map(c -> {
-                    return isDirectory().and(nameEnsdWith(CHAT_FOLDER_SEGMENT_SEPARATOR + creator));
-                })
+                .map(c -> isDirectory().and(nameEndsWith(CHAT_FOLDER_SEGMENT_SEPARATOR + creator)))
                 .orElseGet(() -> isDirectory());
     }
 
-    private Pair<String[], Path> toSearchPair(Path path) {
-        return Pair.pair(path.getFileName().toString().split(CHAT_FOLDER_SEGMENT_SEPARATOR), path);
+    @Getter
+    @RequiredArgsConstructor
+    private static class SearchItem {
+        private final int segmentsCount;
+        private final String chatId;
+        private final String creator;
+        private final Path path;
+
+        public static SearchItem of(Path path) {
+            String[] segments = path.getFileName().toString().split(CHAT_FOLDER_SEGMENT_SEPARATOR);
+
+            return new SearchItem(
+                    segments.length,
+                    segments.length == 2 ? segments[0] : null,
+                    segments.length == 2 ? segments[1] : null,
+                    path);
+        }
+
+        public static boolean isValid(SearchItem item) {
+            return item.getSegmentsCount() == 2;
+        }
     }
 
-    private boolean hasTwoSegments(Pair<String[], Path> pair) {
-        return pair.left().length == 2;
+    private Chat toChat(SearchItem item) {
+        String title = append(TITLE_FILE_NAME).andThen(read()).apply(item.getPath()).get();
+        Date creationTime = getCreationTime().apply(item.getPath()).get();
+
+        return Chat.of(item.getChatId(), title, item.getCreator(), creationTime);
     }
 
-    private Chat toChat(Pair<String[], Path> pair) {
-        String title = append(TITLE_FILE_NAME)
-                .andThen(read())
-                .apply(pair.right())
-                .orElse("Missing chat title");
-        // TODO What to do here ?
-        Date creationTime = creationTime().apply(pair.right()).orElse(null);
-
-        return Chat.of(pair.left()[0], title, pair.left()[1], creationTime);
-    }
-
-    public static String chatFolder(String chatId, String creator) {
+    private String chatFolderPath(String chatId, String creator) {
         return new StringBuilder(chatId)
                 .append(CHAT_FOLDER_SEGMENT_SEPARATOR)
                 .append(creator)
                 .toString();
     }
 
+    public Optional<String> chatFolderAbsolutePath(String chatId) {
+        return getOne(chatId).map(c -> new StringBuilder(rootPath)
+                .append("/")
+                .append(c.getId())
+                .append(CHAT_FOLDER_SEGMENT_SEPARATOR)
+                .append(c.getCreatedBy())
+                .toString());
+    }
+
     private Comparator<Chat> byCreateTs() {
         return Comparator.comparing(Chat::getCreateTs);
+    }
+
+    private Function<Optional<Path>, Optional<Chat>> createChatIfFilesPresent(String chatId, String title, String creator) {
+        return titleFile -> titleFile.map(f -> Chat.of(chatId, title, creator, getCreationTime().apply(f).get()));
     }
 
     @Override

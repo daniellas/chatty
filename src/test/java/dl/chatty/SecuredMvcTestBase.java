@@ -8,6 +8,8 @@ import dl.chatty.config.SecurityConfig;
 
 @RunWith(SpringRunner.class)
 @Import(SecurityConfig.class)
-public abstract class MvcTestBase {
-
+public abstract class SecuredMvcTestBase {
+    protected static final String CUSTOMER_USERNAME = "customer";
+    protected static final String EMPLOYEE_USERNAME = "employee";
+    protected static final String PASSWORD = "password";
 }

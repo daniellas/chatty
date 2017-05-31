@@ -21,7 +21,7 @@
                 password : password
             }).then(function(response) {
                 setAuthenticated($rootScope, true);
-                setUserDetails($rootScope,response.data.plain());
+                setUserDetails($rootScope, response.data.plain());
                 $state.go('chat/list');
                 AlertSrv.showSuccess('You are signed in');
             }, function() {
@@ -52,6 +52,12 @@
 
         this.setUserDetails = function(userDetails) {
             setUserDetails($rootScope, userDetails);
+        };
+
+        this.getCurrentUsername = function() {
+            if ($rootScope.userDetails) {
+                return $rootScope.userDetails.username;
+            }
         };
 
     }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import dl.chatty.chat.broker.Broker;
 
 @Controller
-public class ChatMessageController {
+public class ChatMessagingController {
 
     @Autowired
     private Broker<String, String, Principal> broker;

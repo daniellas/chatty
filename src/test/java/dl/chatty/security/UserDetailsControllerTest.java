@@ -11,21 +11,21 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import dl.chatty.MvcTestBase;
+import dl.chatty.SecuredMvcTestBase;
 
 @WebMvcTest(UserDetailsController.class)
-public class UserDetailsControllerTest extends MvcTestBase {
+public class UserDetailsControllerTest extends SecuredMvcTestBase {
 
     @Autowired
     private MockMvc mvc;
 
     @WithAnonymousUser
     @Test
-    public void shouldRespondUnauthorizedOnAnonymousUser() throws Exception {
+    public void shouldRespondForbiddenOnAnonymousUser() throws Exception {
         mvc.perform(post("/sec/userdetails")).andExpect(status().isForbidden());
     }
 
-    @WithMockUser(username = "customer", password = "password")
+    @WithMockUser(username = CUSTOMER_USERNAME, password = PASSWORD)
     @Test
     public void shouldReturnUserDetails() throws Exception {
         mvc.perform(post("/sec/userdetails"))

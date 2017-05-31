@@ -3,9 +3,10 @@
 
     var mod = angular.module('chatty.chat');
 
-    mod.controller('ChatSessionCtrl', [ '$scope', '$stateParams', '$state', '$document', '$timeout', 'ChatClientSrv', 'RestSrv', Controller ]);
+    mod.controller('ChatSessionCtrl', [ '$scope', '$stateParams', '$state', '$document', '$timeout', '$filter', 'ChatClientSrv', 'RestSrv', 'SecuritySrv',
+            Controller ]);
 
-    function Controller($scope, $stateParams, $state, $document, $timeout, ChatClientSrv, RestSrv) {
+    function Controller($scope, $stateParams, $state, $document, $timeout, $filter, ChatClientSrv, RestSrv, SecuritySrv) {
 
         function scrollBottom() {
             $timeout(function() {
@@ -29,7 +30,7 @@
             RestSrv.one('chats', $stateParams.id).get().then(function(response) {
                 $scope.chat = response.data;
 
-                ChatClientSrv.joinChat($stateParams.id, onMessage).then(function() {
+                ChatClientSrv.joinChat($stateParams.id, SecuritySrv.getCurrentUsername(), onMessage).then(function() {
                     $scope.initialized = true;
                     $scope.$on('$destroy', function() {
                         ChatClientSrv.leaveChat($stateParams.id);
@@ -55,6 +56,10 @@
             if ($event.charCode == 13) {
                 $scope.sendMessage(message);
             }
+        };
+
+        $scope.messageTitle = function(msg) {
+            return 'From ' + msg.from + ' at ' + $filter('chattyFullDate')(msg.sentTs);
         };
 
         $scope.chatTitle = function(chat) {

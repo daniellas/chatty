@@ -72,7 +72,7 @@ public class FileSupportTest {
                 .andThen(mkdir())
                 .apply(absolutePath(tmp.getRoot()));
 
-        Optional<Date> time = folder.flatMap(creationTime());
+        Optional<Date> time = folder.flatMap(getCreationTime());
 
         assertTrue(time.isPresent());
     }
@@ -81,7 +81,7 @@ public class FileSupportTest {
     public void shouldReturnEmptyCreationTimeOnMissingFile() {
         Optional<Date> time = path(createReadOnlyFolder(tmp.getRoot()))
                 .andThen(append("folder"))
-                .andThen(creationTime())
+                .andThen(getCreationTime())
                 .apply(absolutePath(tmp.getRoot()));
 
         assertFalse(time.isPresent());
@@ -91,8 +91,8 @@ public class FileSupportTest {
     public void shouldWriteToReadFromFile() {
         Optional<String> content = path("file")
                 .andThen(mkfile())
-                .andThen(flatWrite("line"))
-                .andThen(flatRead())
+                .andThen(writeIfPresent("line"))
+                .andThen(readIfPresent())
                 .apply(absolutePath(tmp.getRoot()));
 
         assertFileExists(absolutePath(tmp.getRoot()) + "/file");
@@ -104,8 +104,8 @@ public class FileSupportTest {
     public void shouldWriteToReadFromFileMultipleLines() {
         Optional<String> content = path("file")
                 .andThen(mkfile())
-                .andThen(flatWrite("line1\nline2"))
-                .andThen(flatRead())
+                .andThen(writeIfPresent("line1\nline2"))
+                .andThen(readIfPresent())
                 .apply(absolutePath(tmp.getRoot()));
 
         assertFileExists(absolutePath(tmp.getRoot()) + "/file");
@@ -135,10 +135,10 @@ public class FileSupportTest {
     public void shouldCreateFolderFileWriteRead() {
         Optional<String> content = path("folder")
                 .andThen(mkdir())
-                .andThen(flatAppend("file"))
-                .andThen(flatMkfile())
-                .andThen(flatWrite("line"))
-                .andThen(flatRead())
+                .andThen(appendIfPresent("file"))
+                .andThen(mkfileIfPresent())
+                .andThen(writeIfPresent("line"))
+                .andThen(readIfPresent())
                 .apply(absolutePath(tmp.getRoot()));
 
         assertThat(content.get(), is("line"));

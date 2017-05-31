@@ -42,7 +42,7 @@ public class FileSupport {
         return p -> Paths.get(p.toString(), path);
     }
 
-    public static Function<Optional<Path>, Optional<Path>> flatAppend(String path) {
+    public static Function<Optional<Path>, Optional<Path>> appendIfPresent(String path) {
         return p -> p.map(append(path));
     }
 
@@ -51,7 +51,7 @@ public class FileSupport {
      * 
      * @return creation time {@link Function}
      */
-    public static Function<Path, Optional<Date>> creationTime() {
+    public static Function<Path, Optional<Date>> getCreationTime() {
         return path -> {
             try {
                 FileTime time = Files.getFileAttributeView(path, BasicFileAttributeView.class).readAttributes().creationTime();
@@ -99,7 +99,7 @@ public class FileSupport {
         };
     }
 
-    public static Function<Optional<Path>, Optional<Path>> flatMkfile() {
+    public static Function<Optional<Path>, Optional<Path>> mkfileIfPresent() {
         return path -> path.flatMap(mkfile());
     }
 
@@ -119,7 +119,7 @@ public class FileSupport {
         };
     }
 
-    public static Function<Optional<Path>, Optional<Path>> flatWrite(String content) {
+    public static Function<Optional<Path>, Optional<Path>> writeIfPresent(String content) {
         return path -> {
             return path.flatMap(write(content));
         };
@@ -144,19 +144,19 @@ public class FileSupport {
         };
     }
 
-    public static Function<Optional<Path>, Optional<String>> flatRead() {
+    public static Function<Optional<Path>, Optional<String>> readIfPresent() {
         return path -> {
             return path.flatMap(read());
         };
     }
 
-    public static Function<String, Stream<Path>> findFiles(Predicate<Path> pathFilter) {
+    public static Function<String, Stream<Path>> findFiles(Predicate<Path> filter) {
         return path -> {
             try {
                 Path root = Paths.get(path);
 
                 return Files.find(root, 1, (p, attr) -> {
-                    return pathFilter.and(isNotRoot(root)).test(p);
+                    return filter.and(isNotRoot(root)).test(p);
                 });
             } catch (IOException e) {
                 return Stream.empty();
@@ -176,7 +176,7 @@ public class FileSupport {
         return p -> p.getFileName().toString().startsWith(prefix);
     }
 
-    public static Predicate<Path> nameEnsdWith(String suffix) {
+    public static Predicate<Path> nameEndsWith(String suffix) {
         return p -> p.getFileName().toString().endsWith(suffix);
     }
 

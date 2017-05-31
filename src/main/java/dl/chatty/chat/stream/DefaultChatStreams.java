@@ -3,8 +3,8 @@ package dl.chatty.chat.stream;
 import java.util.Collection;
 import java.util.Optional;
 
+import dl.chatty.chat.mapping.ChatMapper;
 import dl.chatty.chat.repository.ChatRepository;
-import dl.chatty.chat.view.ChatMapper;
 import dl.chatty.chat.view.ChatView;
 import dl.chatty.security.CurrentUsernameSupplier;
 import io.reactivex.Observable;
@@ -15,7 +15,7 @@ public class DefaultChatStreams implements ChatStreams {
 
     private final ChatRepository chatRepo;
 
-    private final CurrentUsernameSupplier currentUsernameSupplier;
+    private final CurrentUsernameSupplier usernameSupplier;
 
     @Override
     public Observable<Collection<ChatView>> findAll() {
@@ -29,9 +29,8 @@ public class DefaultChatStreams implements ChatStreams {
         return Observable.just(chat)
                 .map(ChatMapper::toEntity)
                 .map(t -> {
-                    return chatRepo.create(t, currentUsernameSupplier.getOrThrowNoCredentials());
+                    return chatRepo.create(t, usernameSupplier.justGet());
                 })
-                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(ChatMapper::toView);
     }

@@ -7,13 +7,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.messaging.MessageHeaders;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class StompHeadersUtil {
 
-    private final static String DESTINATION_HEADER_KEY = "simpDestination";
+    public final static String DESTINATION_HEADER_KEY = "simpDestination";
 
-    private final static String NATIVE_HEADERS_KEY = "nativeHeaders";
+    public final static String NATIVE_HEADERS_KEY = "nativeHeaders";
 
-    private final static String NATIVE_HEADERS_ID_KEY = "id";
+    public final static String NATIVE_HEADERS_ID_KEY = "id";
 
     public static String destination(MessageHeaders headers) {
         return Optional.ofNullable(headers.get(DESTINATION_HEADER_KEY))

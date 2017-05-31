@@ -34,12 +34,7 @@
                         <strong>There are no messages in this chat</strong>
                     </div>
                     <div class="list-group" ng-if="messages.length">
-                        <div class="list-group-item" ng-repeat="item in messages">
-                            <p>{{item.message}}</p>
-                            <p>
-                                <strong>{{item.sentTs | chattyFullDate}}</strong> from <strong>{{item.from}}</strong>
-                            </p>
-                        </div>
+                        <div class="list-group-item" ng-repeat="item in messages" title="{{messageTitle(item)}}">{{item.message}}</div>
                     </div>
                 </div>
             </div>

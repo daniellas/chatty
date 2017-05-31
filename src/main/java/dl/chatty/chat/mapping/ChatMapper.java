@@ -1,11 +1,15 @@
-package dl.chatty.chat.view;
+package dl.chatty.chat.mapping;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import dl.chatty.chat.entity.Chat;
+import dl.chatty.chat.view.ChatView;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatMapper {
 
     public static ChatView toView(Chat entity) {

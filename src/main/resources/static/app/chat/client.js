@@ -7,8 +7,8 @@
 
     function Service(StompSrv) {
 
-        this.joinChat = function(chatId, handler) {
-            return StompSrv.subscribe('/chat', '/topic/messages/' + chatId, handler);
+        this.joinChat = function(chatId, user, handler) {
+            return StompSrv.subscribe('/chat', '/topic/messages/' + chatId + '/' + user, handler);
         };
 
         this.leaveChat = function(chatId) {

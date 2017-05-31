@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 public class AngularUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -48,12 +49,13 @@ public class AngularUsernamePasswordAuthenticationFilter extends AbstractAuthent
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(authResult);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         mapper.writeValue(response.getOutputStream(), UserDetailsView.of(authResult));
     }
 
-    @Setter
+    @AllArgsConstructor
     @Getter
-    private static class Credentials {
+    static class Credentials {
         private String username;
         private String password;
 

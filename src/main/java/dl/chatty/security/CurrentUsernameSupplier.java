@@ -12,4 +12,8 @@ public interface CurrentUsernameSupplier extends Supplier<Optional<String>> {
             return new AuthenticationCredentialsNotFoundException("Not authenticated");
         });
     }
+
+    default String justGet() {
+        return get().get();
+    }
 }
