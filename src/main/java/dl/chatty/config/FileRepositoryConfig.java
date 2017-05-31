@@ -4,7 +4,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import dl.chatty.chat.repository.ChatRepository;
 import dl.chatty.chat.repository.FileChatRepository;
 import dl.chatty.chat.repository.FileMessageRepository;
 import dl.chatty.chat.repository.MessageRepository;
@@ -22,7 +21,7 @@ public class FileRepositoryConfig {
     }
 
     @Bean
-    public ChatRepository fileChatRepository(FileRepositoryProperties props, IdSupplier<String> idSupplier) {
+    public FileChatRepository fileChatRepository(FileRepositoryProperties props, IdSupplier<String> idSupplier) {
         return new FileChatRepository(props.getRootPath(), idSupplier);
     }
 
