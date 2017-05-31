@@ -31,7 +31,6 @@ public class ChatBrokerConfig {
             IdSupplier<String> messageIdSupplier,
             MessageRepository messageRepo,
             ChatSubscriptionRegistry<String> subscriptionRegistry) {
-
         return new SimpBroker(simpMessagingTemplate, messageRepo, new AntPathMatcher("/"), subscriptionRegistry);
     }
 
