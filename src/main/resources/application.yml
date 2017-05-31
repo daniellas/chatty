@@ -6,7 +6,7 @@ chatty:
     employeePassword: password
   repository:
     file:
-      rootPath: repo-root
+      rootPath: reporoot
 
 logging:
   level:
