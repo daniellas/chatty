@@ -1,8 +1,11 @@
 package dl.chatty.chat.controller;
 
 import static org.mockito.Mockito.*;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dl.chatty.SecuredMvcTestBase;
@@ -56,7 +61,16 @@ public class ChatControllerTest extends SecuredMvcTestBase {
                 .map(ChatMapper::toViewList);
 
         when(chatStreams.findAll()).thenReturn(observable);
-        mvc.perform(get("/chats")).andExpect(status().isOk());
+
+        MvcResult result = mvc.perform(get("/chats"))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvc.perform(asyncDispatch(result))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.[0].id", is("1")))
+                .andExpect(jsonPath("$.[1].id", is("2")));
     }
 
     @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD, roles = { "CUSTOMER" })
@@ -66,6 +80,45 @@ public class ChatControllerTest extends SecuredMvcTestBase {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(mapper.writeValueAsString(new ChatView(null, null, null, null))))
                 .andExpect(status().isBadRequest());
+    }
+
+    @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD, roles = { "CUSTOMER" })
+    @Test
+    public void shouldGetById() throws JsonProcessingException, Exception {
+        when(chatStreams.getOne("id")).thenReturn(Observable.just(new ChatView("id", "title", "user", new Date())));
+
+        MvcResult result = mvc.perform(get("/chats/{id}", "id"))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvc.perform(asyncDispatch(result))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is("id")))
+                .andExpect(jsonPath("$.title", is("title")))
+                .andExpect(jsonPath("$.createdBy", is("user")))
+                .andExpect(jsonPath("$.createTs", is(not(empty()))));
+    }
+
+    @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD, roles = { "CUSTOMER" })
+    @Test
+    public void shouldCreateChat() throws Exception {
+        when(chatStreams.create(any())).thenReturn(Observable.just(new ChatView("id", "title", "user", new Date())));
+
+        MvcResult result = mvc.perform(post("/chats")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(mapper.writeValueAsString(new ChatView(null, "title", null, null))))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvc.perform(asyncDispatch(result))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is("id")))
+                .andExpect(jsonPath("$.title", is("title")))
+                .andExpect(jsonPath("$.createdBy", is("user")))
+                .andExpect(jsonPath("$.createTs", is(not(empty()))));
+
     }
 
 }

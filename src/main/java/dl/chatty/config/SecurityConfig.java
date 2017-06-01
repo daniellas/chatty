@@ -25,10 +25,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dl.chatty.config.properties.SecurityProperties;
 import dl.chatty.security.AngularUsernamePasswordAuthenticationFilter;
-import dl.chatty.security.CurrentUsernameSupplier;
-import dl.chatty.security.SecurityContextCurrentUsernameSupplier;
+import dl.chatty.security.AuthenticationSupplier;
+import dl.chatty.security.CustomerUsernameEnforcer;
+import dl.chatty.security.UsernameSupplier;
+import dl.chatty.security.SecurityContextAuthenticationSupplier;
+import dl.chatty.security.SecurityContextUsernameSupplier;
 import dl.chatty.security.UserDetailsController;
 import dl.chatty.security.UserDetailsView;
+import dl.chatty.security.UsernameEnforcer;
 
 @Configuration
 @EnableWebSecurity
@@ -96,8 +100,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CurrentUsernameSupplier currentusernameSupplier() {
-        return new SecurityContextCurrentUsernameSupplier();
+    public AuthenticationSupplier authenticationSupplier() {
+        return new SecurityContextAuthenticationSupplier();
+    }
+
+    @Bean
+    public UsernameSupplier usernameSupplier(AuthenticationSupplier authenticationSupplier) {
+        return new SecurityContextUsernameSupplier(authenticationSupplier);
+    }
+
+    @Bean
+    public UsernameEnforcer customerUsernameEnforcer(AuthenticationSupplier authenticationSupplier) {
+        return new CustomerUsernameEnforcer(authenticationSupplier);
     }
 
     private Collection<UserDetails> testUsers() {

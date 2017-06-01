@@ -20,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.AntPathMatcher;
 
+import dl.chatty.chat.entity.Chat;
 import dl.chatty.chat.entity.Message;
 import dl.chatty.chat.protocol.ChatMessage;
 import dl.chatty.chat.repository.MessageRepository;
@@ -53,6 +54,9 @@ public class SimpBrokerTest {
     @Mock
     private Map<String, String> uriVariables;
 
+    @Mock
+    private MessageSendGuard messageSendGuard;
+
     @InjectMocks
     private SimpBroker broker;
 
@@ -63,6 +67,7 @@ public class SimpBrokerTest {
 
     @Test
     public void shouldSendAsyncByDefault() {
+        when(messageSendGuard.messageChat(any())).thenReturn(Optional.of(Chat.of("id", "title", "customer", new Date())));
         when(messageRepository.create(any(), any(), any())).thenReturn(Optional.of(Message.of("id", "message", "user", new Date())));
 
         broker.onSend("id", "message", principal);
@@ -71,14 +76,28 @@ public class SimpBrokerTest {
 
     @Test
     public void shouldFollowOnSendFlow() {
+        when(messageSendGuard.messageChat(any())).thenReturn(Optional.of(Chat.of("id", "title", "customer", new Date())));
         when(messageRepository.create(any(), any(), any())).thenReturn(Optional.of(Message.of("id", "message", "user", new Date())));
         when(subscriptionRegistry.chatDestinations(any())).thenReturn(Arrays.asList("destination1", "destination2"));
 
         broker.asyncObservable = false;
         broker.onSend("id", "message", principal);
+        verify(messageSendGuard).messageChat("id");
         verify(messageRepository).create(any(), any(), any());
         verify(subscriptionRegistry).chatDestinations(any());
         verify(simpMessagetemplate, times(2)).convertAndSend(anyString(), any(ChatMessage.class));
+    }
+
+    @Test
+    public void shouldSkipSendbyCustomerToNotOwnedChat() {
+        when(messageSendGuard.messageChat(any())).thenReturn(Optional.empty());
+
+        broker.asyncObservable = false;
+        broker.onSend("id", "message", principal);
+        verify(messageSendGuard).messageChat("id");
+        verify(messageRepository, never()).create(any(), any(), any());
+        verify(subscriptionRegistry, never()).chatDestinations(any());
+        verify(simpMessagetemplate, never()).convertAndSend(anyString(), any(ChatMessage.class));
     }
 
     @Test

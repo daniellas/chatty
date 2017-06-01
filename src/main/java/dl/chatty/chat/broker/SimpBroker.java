@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.PathMatcher;
 
+import dl.chatty.chat.entity.Chat;
 import dl.chatty.chat.entity.Message;
 import dl.chatty.chat.protocol.ChatMessage;
 import dl.chatty.chat.repository.MessageRepository;
@@ -36,16 +37,23 @@ public class SimpBroker implements Broker<String, String, Principal> {
 
     private final ExecutorsProvider executorsProvider;
 
+    private final MessageSendGuard messageSendGuard;
+
     boolean asyncObservable = true;
 
     @Override
     public void onSend(String chatId, String message, Principal sender) {
-        Observable<Optional<Message>> observable = Observable
+        Observable<Optional<Chat>> observable = Observable
                 .fromCallable(() -> {
-                    return messageRepository.create(chatId, Message.of(null, message, null, null), sender.getName());
+                    return messageSendGuard.messageChat(chatId);
                 });
 
         subscribeOnShedulerIfAsync(observable)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(c -> {
+                    return messageRepository.create(c.getId(), Message.of(null, message, null, null), sender.getName());
+                })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .subscribe(msg -> {

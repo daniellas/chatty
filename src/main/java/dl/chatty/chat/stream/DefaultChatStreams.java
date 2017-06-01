@@ -9,8 +9,9 @@ import dl.chatty.chat.mapping.ChatMapper;
 import dl.chatty.chat.repository.ChatRepository;
 import dl.chatty.chat.view.ChatView;
 import dl.chatty.concurrency.ExecutorsProvider;
-import dl.chatty.security.CurrentUsernameSupplier;
+import dl.chatty.security.UsernameSupplier;
 import dl.chatty.security.Roles;
+import dl.chatty.security.UsernameEnforcer;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
@@ -21,15 +22,17 @@ public class DefaultChatStreams implements ChatStreams {
 
     private final ChatRepository chatRepo;
 
-    private final CurrentUsernameSupplier usernameSupplier;
+    private final UsernameSupplier usernameSupplier;
 
     private final ExecutorsProvider executorsProvider;
+
+    private final UsernameEnforcer usernameEnforcer;
 
     @Override
     public Observable<Collection<ChatView>> findAll() {
         return Observable
                 .fromCallable(() -> {
-                    return chatRepo.findAll(null);
+                    return chatRepo.findAll(usernameEnforcer.apply(null));
                 })
                 .observeOn(fileIOScheduler())
                 .map(ChatMapper::toViewList);

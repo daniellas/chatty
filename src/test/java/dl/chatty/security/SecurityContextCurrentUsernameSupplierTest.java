@@ -8,7 +8,7 @@ import dl.chatty.SecurityTestUtil;
 
 public class SecurityContextCurrentUsernameSupplierTest {
 
-    private CurrentUsernameSupplier usernameSupplier = new SecurityContextCurrentUsernameSupplier();
+    private UsernameSupplier usernameSupplier = new SecurityContextUsernameSupplier(new SecurityContextAuthenticationSupplier());
 
     @Test
     public void shouldReturnCurrentUser() {

@@ -10,13 +10,18 @@ import org.springframework.util.AntPathMatcher;
 import dl.chatty.chat.broker.Broker;
 import dl.chatty.chat.broker.ChatSubscriptionRegistry;
 import dl.chatty.chat.broker.DefaultChatSubscriptionRegistry;
+import dl.chatty.chat.broker.MessageSendGuard;
+import dl.chatty.chat.broker.RoleBasedMessageSendGuard;
 import dl.chatty.chat.broker.SimpBroker;
 import dl.chatty.chat.broker.event.ChatDisconnectEventListener;
 import dl.chatty.chat.broker.event.ChatSubscribeEventListener;
 import dl.chatty.chat.broker.event.ChatUnsubscribeEventListener;
+import dl.chatty.chat.repository.ChatRepository;
 import dl.chatty.chat.repository.MessageRepository;
 import dl.chatty.concurrency.ExecutorsProvider;
 import dl.chatty.id.IdSupplier;
+import dl.chatty.security.AuthenticationSupplier;
+import dl.chatty.security.UsernameSupplier;
 
 @Configuration
 public class ChatBrokerConfig {
@@ -32,8 +37,9 @@ public class ChatBrokerConfig {
             IdSupplier<String> messageIdSupplier,
             MessageRepository messageRepo,
             ChatSubscriptionRegistry<String> subscriptionRegistry,
-            ExecutorsProvider executorsProvider) {
-        return new SimpBroker(simpMessagingTemplate, messageRepo, new AntPathMatcher("/"), subscriptionRegistry, executorsProvider);
+            ExecutorsProvider executorsProvider,
+            MessageSendGuard messageSendGuard) {
+        return new SimpBroker(simpMessagingTemplate, messageRepo, new AntPathMatcher("/"), subscriptionRegistry, executorsProvider, messageSendGuard);
     }
 
     @Bean
@@ -49,5 +55,10 @@ public class ChatBrokerConfig {
     @Bean
     public ChatDisconnectEventListener disconnectEventListener(Broker<String, ?, Principal> broker) {
         return new ChatDisconnectEventListener(broker);
+    }
+
+    @Bean
+    public MessageSendGuard messageSendGuard(ChatRepository chatRepository, AuthenticationSupplier authenticationSupplier, UsernameSupplier usernameSupplier) {
+        return new RoleBasedMessageSendGuard(chatRepository, authenticationSupplier, usernameSupplier);
     }
 }
