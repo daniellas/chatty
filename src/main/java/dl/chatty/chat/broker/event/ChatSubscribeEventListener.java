@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatSubscribeEventListener implements ApplicationListener<SessionSubscribeEvent> {
 
-    private final Broker<String, ?, Principal> broker;
+    private final Broker<Long, ?, Principal> broker;
 
     @Override
     public void onApplicationEvent(SessionSubscribeEvent event) {

@@ -11,7 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ChatView {
-    private String id;
+    private Long id;
     @NotNull
     @Size(min = 1)
     private String title;

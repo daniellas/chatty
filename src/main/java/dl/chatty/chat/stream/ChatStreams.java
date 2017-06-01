@@ -10,6 +10,6 @@ public interface ChatStreams {
 
     Observable<ChatView> create(ChatView chat);
     
-    Observable<ChatView> getOne(String id);
+    Observable<ChatView> getOne(Long id);
 
 }

@@ -16,11 +16,11 @@ public class ChatViewDataTest extends DataTestBase<ChatView> {
                 EqualityPair.equalPair(
                         new ChatView(null, null, null, null), new ChatView(null, null, null, null)),
                 EqualityPair.equalPair(
-                        new ChatView("1", null, null, null), new ChatView("1", null, null, null)),
+                        new ChatView(1l, null, null, null), new ChatView(1l, null, null, null)),
                 EqualityPair.inequalPair(
-                        new ChatView("1", null, null, null), new ChatView(null, null, null, null)),
+                        new ChatView(1l, null, null, null), new ChatView(null, null, null, null)),
                 EqualityPair.inequalPair(
-                        new ChatView(null, null, null, null), new ChatView("1", null, null, null)),
+                        new ChatView(null, null, null, null), new ChatView(1l, null, null, null)),
                 EqualityPair.inequalPair(
                         new ChatView(null, null, null, null), "String"));
     }

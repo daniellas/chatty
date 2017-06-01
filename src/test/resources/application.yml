@@ -20,3 +20,9 @@ logging:
 endpoints:
   jmx:
     enabled: true
+
+db:
+  url: jdbc:h2:mem:testdb
+  username: hrtools
+  password: hrtools
+  maxPoolSize: 20

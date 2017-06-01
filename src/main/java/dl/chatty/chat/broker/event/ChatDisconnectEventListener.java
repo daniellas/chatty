@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatDisconnectEventListener implements ApplicationListener<SessionDisconnectEvent> {
 
-    private final Broker<String, ?, Principal> broker;
+    private final Broker<Long, ?, Principal> broker;
 
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {

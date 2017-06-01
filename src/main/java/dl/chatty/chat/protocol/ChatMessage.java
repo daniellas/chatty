@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @EqualsAndHashCode(of = { "id" })
 @Data
 public class ChatMessage {
-    private final String id;
+    private final Long id;
     private final String from;
     @NotNull
     private final String message;

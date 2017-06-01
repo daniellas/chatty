@@ -1,17 +1,16 @@
 package dl.chatty.chat.stream;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
-
-import static org.junit.Assert.*;
-
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 import dl.chatty.IntegrationTestBase;
 import dl.chatty.SecurityTestUtil;
@@ -69,7 +68,7 @@ public class DefaultChatStreamsITest extends IntegrationTestBase {
 
     @Test(expected = NoSuchElementException.class)
     public void shouldFailOnNonExistentChatGet() {
-        streams.getOne("x").blockingFirst();
+        streams.getOne(-1l).blockingFirst();
     }
 
     @Test

@@ -12,11 +12,6 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 @ManagedResource
 public class ConfigurableExecutorsProvider implements ExecutorsProvider {
 
-    private final ThreadPoolExecutor fileIOExecutor = new ThreadPoolExecutor(
-            5, 5,
-            0L, TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<Runnable>());
-
     private final ThreadPoolExecutor messageExecutor = new ThreadPoolExecutor(
             Runtime.getRuntime().availableProcessors(),
             Runtime.getRuntime().availableProcessors(),
@@ -24,40 +19,8 @@ public class ConfigurableExecutorsProvider implements ExecutorsProvider {
             new LinkedBlockingQueue<Runnable>());
 
     @Override
-    public Executor fileIOExecutor() {
-        return fileIOExecutor;
-    }
-
-    @Override
     public Executor messageExecutor() {
         return messageExecutor;
-    }
-
-    @ManagedAttribute
-    public int getFileIOPoolSize() {
-        return fileIOExecutor.getPoolSize();
-    }
-
-    @ManagedAttribute
-    public int getFileIOMaximumPoolSize() {
-        return fileIOExecutor.getMaximumPoolSize();
-    }
-
-    @ManagedAttribute
-    public int getFileIOCorePoolSize() {
-        return fileIOExecutor.getCorePoolSize();
-    }
-
-    @ManagedAttribute
-    public long getFileIOKeepAliveTimeMs() {
-        return fileIOExecutor.getKeepAliveTime(TimeUnit.MILLISECONDS);
-    }
-
-    @ManagedOperation
-    public void setFileIOProperties(int corePoolSize, int maximumPoolSize, long keepAliveTimeMs) {
-        fileIOExecutor.setCorePoolSize(corePoolSize);
-        fileIOExecutor.setMaximumPoolSize(maximumPoolSize);
-        fileIOExecutor.setKeepAliveTime(keepAliveTimeMs, TimeUnit.MILLISECONDS);
     }
 
     @ManagedAttribute

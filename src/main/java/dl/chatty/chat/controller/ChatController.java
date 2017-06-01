@@ -28,7 +28,7 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public DeferredResult<ChatView> get(@PathVariable String id) {
+    public DeferredResult<ChatView> get(@PathVariable Long id) {
         return DeferredResultSubscriber.subscribe(chatStreams.getOne(id));
     }
 

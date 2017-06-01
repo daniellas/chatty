@@ -17,9 +17,9 @@ public class ChatMapperTest {
     @Test
     public void shouldMapToView() {
         Date date = new Date();
-        ChatView view = ChatMapper.toView(Chat.of("id", "title", "customer", date));
+        ChatView view = ChatMapper.toView(Chat.of(1l, "title", "customer", date));
 
-        assertEquals("id", view.getId());
+        assertEquals(new Long(1l), view.getId());
         assertEquals("title", view.getTitle());
         assertEquals("customer", view.getCreatedBy());
         assertEquals(date, view.getCreateTs());
@@ -29,21 +29,21 @@ public class ChatMapperTest {
     public void shouldMapToViewList() {
         Date date = new Date();
         List<Chat> chats = Arrays.asList(
-                Chat.of("id", "title", "customer", date),
-                Chat.of("id1", "title1", "customer1", date));
+                Chat.of(1l, "title", "customer", date),
+                Chat.of(2l, "title1", "customer1", date));
 
         assertThat(ChatMapper.toViewList(chats),
                 contains(
-                        new ChatView("id", "title", "customer", date),
-                        new ChatView("id1", "title1", "customer1", date)));
+                        new ChatView(1l, "title", "customer", date),
+                        new ChatView(2l, "title1", "customer1", date)));
     }
 
     @Test
     public void shouldMapToEntity() {
         Date date = new Date();
-        Chat entity = ChatMapper.toEntity(new ChatView("id", "title", "customer", date));
+        Chat entity = ChatMapper.toEntity(new ChatView(1l, "title", "customer", date));
 
-        assertEquals("id", entity.getId());
+        assertEquals(new Long(1l), entity.getId());
         assertEquals("title", entity.getTitle());
         assertEquals("customer", entity.getCreatedBy());
         assertEquals(date, entity.getCreateTs());

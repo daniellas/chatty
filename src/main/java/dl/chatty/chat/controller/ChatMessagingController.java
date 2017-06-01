@@ -14,10 +14,10 @@ import dl.chatty.chat.broker.Broker;
 public class ChatMessagingController {
 
     @Autowired
-    private Broker<String, String, Principal> broker;
+    private Broker<Long, String, Principal> broker;
 
     @MessageMapping("/messages/{chatId}")
-    public void handleMessage(@Payload String message, @DestinationVariable("chatId") String chatId, Principal sender) {
+    public void handleMessage(@Payload String message, @DestinationVariable("chatId") Long chatId, Principal sender) {
         broker.onSend(chatId, message, sender);
     }
 

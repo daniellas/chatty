@@ -45,8 +45,8 @@ public class ChatControllerTest extends SecuredMvcTestBase {
     private ObjectMapper mapper;
 
     private static Collection<Chat> CHATS = Arrays.asList(
-            Chat.of("1", "title1", "user1", new Date()),
-            Chat.of("2", "title2", "user2", new Date()));
+            Chat.of(1l, "title1", "user1", new Date()),
+            Chat.of(2l, "title2", "user2", new Date()));
 
     @WithAnonymousUser
     @Test
@@ -69,8 +69,8 @@ public class ChatControllerTest extends SecuredMvcTestBase {
         mvc.perform(asyncDispatch(result))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.[0].id", is("1")))
-                .andExpect(jsonPath("$.[1].id", is("2")));
+                .andExpect(jsonPath("$.[0].id", is(1)))
+                .andExpect(jsonPath("$.[1].id", is(2)));
     }
 
     @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD, roles = { "CUSTOMER" })
@@ -85,16 +85,16 @@ public class ChatControllerTest extends SecuredMvcTestBase {
     @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD, roles = { "CUSTOMER" })
     @Test
     public void shouldGetById() throws JsonProcessingException, Exception {
-        when(chatStreams.getOne("id")).thenReturn(Observable.just(new ChatView("id", "title", "user", new Date())));
+        when(chatStreams.getOne(1l)).thenReturn(Observable.just(new ChatView(1l, "title", "user", new Date())));
 
-        MvcResult result = mvc.perform(get("/chats/{id}", "id"))
+        MvcResult result = mvc.perform(get("/chats/{id}", 1))
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
         mvc.perform(asyncDispatch(result))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is("id")))
+                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("title")))
                 .andExpect(jsonPath("$.createdBy", is("user")))
                 .andExpect(jsonPath("$.createTs", is(not(empty()))));
@@ -103,7 +103,7 @@ public class ChatControllerTest extends SecuredMvcTestBase {
     @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD, roles = { "CUSTOMER" })
     @Test
     public void shouldCreateChat() throws Exception {
-        when(chatStreams.create(any())).thenReturn(Observable.just(new ChatView("id", "title", "user", new Date())));
+        when(chatStreams.create(any())).thenReturn(Observable.just(new ChatView(1l, "title", "user", new Date())));
 
         MvcResult result = mvc.perform(post("/chats")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -114,7 +114,7 @@ public class ChatControllerTest extends SecuredMvcTestBase {
         mvc.perform(asyncDispatch(result))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is("id")))
+                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("title")))
                 .andExpect(jsonPath("$.createdBy", is("user")))
                 .andExpect(jsonPath("$.createTs", is(not(empty()))));

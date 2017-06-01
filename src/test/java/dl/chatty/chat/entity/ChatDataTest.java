@@ -16,11 +16,11 @@ public class ChatDataTest extends DataTestBase<Chat> {
                 EqualityPair.equalPair(
                         Chat.of(null, null, null, null), Chat.of(null, null, null, null)),
                 EqualityPair.equalPair(
-                        Chat.of("1", null, null, null), Chat.of("1", null, null, null)),
+                        Chat.of(1l, null, null, null), Chat.of(1l, null, null, null)),
                 EqualityPair.inequalPair(
-                        Chat.of("1", null, null, null), Chat.of(null, null, null, null)),
+                        Chat.of(1l, null, null, null), Chat.of(null, null, null, null)),
                 EqualityPair.inequalPair(
-                        Chat.of(null, null, null, null), Chat.of("1", null, null, null)),
+                        Chat.of(null, null, null, null), Chat.of(1l, null, null, null)),
                 EqualityPair.inequalPair(
                         Chat.of(null, null, null, null), "String"));
     }

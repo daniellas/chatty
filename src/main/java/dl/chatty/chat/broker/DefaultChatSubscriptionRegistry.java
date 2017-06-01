@@ -11,14 +11,14 @@ import lombok.RequiredArgsConstructor;
 
 @Transactional
 @RequiredArgsConstructor
-public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry<String> {
+public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry<Long> {
 
     private static final String SEPARATOR = "/";
 
     private final ChatSubscriptionRepository chatSubscriptionRepository;
 
     @Override
-    public void create(String chatId, String user, Collection<String> subscriptionIds) {
+    public void create(Long chatId, String user, Collection<String> subscriptionIds) {
         chatSubscriptionRepository.save(ChatSubscription.of(null, user, chatId, subscriptionIds.toString()));
     }
 
@@ -33,13 +33,13 @@ public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry
     }
 
     @Override
-    public Collection<String> chatDestinations(String chatId) {
+    public Collection<String> chatDestinations(Long chatId) {
         return chatSubscriptionRepository.findByChat(chatId).stream()
                 .map(s -> SEPARATOR + s.getChat() + SEPARATOR + s.getUser()).collect(Collectors.toList());
     }
 
     @Override
-    public String chatUserDestination(String chatId, String user) {
+    public String chatUserDestination(Long chatId, String user) {
         return SEPARATOR + chatId + SEPARATOR + user;
     }
 

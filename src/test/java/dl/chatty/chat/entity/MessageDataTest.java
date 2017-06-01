@@ -14,14 +14,14 @@ public class MessageDataTest extends DataTestBase<Message> {
     public static Collection<EqualityPair<Message>> parameters() {
         return Arrays.asList(
                 EqualityPair.equalPair(
-                        Message.of(null, null, null, null), Message.of(null, null, null, null)),
+                        Message.of(null, null, null, null, null), Message.of(null, null, null, null, null)),
                 EqualityPair.equalPair(
-                        Message.of("1", null, null, null), Message.of("1", null, null, null)),
+                        Message.of(1l, null, null, null, null), Message.of(1l, null, null, null, null)),
                 EqualityPair.inequalPair(
-                        Message.of("1", null, null, null), Message.of(null, null, null, null)),
+                        Message.of(1l, null, null, null, null), Message.of(null, null, null, null, null)),
                 EqualityPair.inequalPair(
-                        Message.of(null, null, null, null), Message.of("1", null, null, null)),
+                        Message.of(null, null, null, null, null), Message.of(1l, null, null, null, null)),
                 EqualityPair.inequalPair(
-                        Message.of(null, null, null, null), "String"));
+                        Message.of(null, null, null, null, null), "String"));
     }
 }

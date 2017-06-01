@@ -5,19 +5,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @EqualsAndHashCode(of = "id")
-@Setter
-@Getter
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "user", "chat", "sub" }))
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
+@Data
 public class ChatSubscription {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +28,7 @@ public class ChatSubscription {
     private String user;
 
     @Column(nullable = false)
-    private String chat;
+    private Long chat;
 
     private String sub;
 }

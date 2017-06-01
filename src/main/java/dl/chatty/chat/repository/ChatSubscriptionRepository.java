@@ -12,6 +12,6 @@ public interface ChatSubscriptionRepository extends JpaRepository<ChatSubscripti
 
     List<ChatSubscription> findByUser(String user);
 
-    List<ChatSubscription> findByChat(String chat);
+    List<ChatSubscription> findByChat(Long chat);
 
 }

@@ -15,15 +15,15 @@ import dl.chatty.chat.broker.Broker;
 public class ChatMessagingControllerTest {
 
     @Mock
-    private Broker<String, String, Principal> broker;
+    private Broker<Long, String, Principal> broker;
 
     @InjectMocks
     private ChatMessagingController controller;
 
     @Test
     public void shouldSendMessage() {
-        controller.handleMessage("msg", "id", null);
+        controller.handleMessage("msg", 1l, null);
 
-        Mockito.verify(broker).onSend("id", "msg", null);
+        Mockito.verify(broker).onSend(1l, "msg", null);
     }
 }

@@ -1,13 +1,12 @@
 package dl.chatty.chat.repository;
 
 import java.util.Collection;
-import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import dl.chatty.chat.entity.Message;
 
-public interface MessageRepository {
+public interface MessageRepository extends JpaRepository<Message, Long>{
 
-    Optional<Message> create(String chatId, Message sourceMessage, String sender);
-
-    Collection<Message> findForChat(String chatId);
+    Collection<Message> findByChatId(Long chatId);
 }

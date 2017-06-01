@@ -6,5 +6,5 @@ import java.util.Optional;
 import dl.chatty.chat.entity.Chat;
 
 public interface MessageSendGuard {
-    Optional<Chat> messageChat(String chatId,Principal user);
+    Optional<Chat> messageChat(Long chatId,Principal user);
 }

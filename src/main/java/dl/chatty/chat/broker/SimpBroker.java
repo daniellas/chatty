@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SimpBroker implements Broker<String, String, Principal> {
+public class SimpBroker implements Broker<Long, String, Principal> {
 
     public static final String MESSAGES_TOPIC = "/topic/messages";
     private static final String CHAT_ID_VARIABLE = "chatId";
@@ -33,7 +33,7 @@ public class SimpBroker implements Broker<String, String, Principal> {
 
     private final PathMatcher destinationMatcher;
 
-    private final ChatSubscriptionRegistry<String> subscriptionRegistry;
+    private final ChatSubscriptionRegistry<Long> subscriptionRegistry;
 
     private final ExecutorsProvider executorsProvider;
 
@@ -42,7 +42,7 @@ public class SimpBroker implements Broker<String, String, Principal> {
     boolean asyncObservable = true;
 
     @Override
-    public void onSend(String chatId, String message, Principal sender) {
+    public void onSend(Long chatId, String message, Principal sender) {
         Optional<Chat> guardedChat = messageSendGuard.messageChat(chatId, sender);
 
         Observable<Optional<Chat>> observable = Observable.just(guardedChat);
@@ -51,10 +51,8 @@ public class SimpBroker implements Broker<String, String, Principal> {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(c -> {
-                    return messageRepository.create(c.getId(), Message.of(null, message, null, null), sender.getName());
+                    return messageRepository.save(Message.of(null, message, sender.getName(), null, c));
                 })
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .subscribe(msg -> {
                     broadcast(chatId, msg);
                 });
@@ -66,7 +64,7 @@ public class SimpBroker implements Broker<String, String, Principal> {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(variables -> {
-                    return variables.get(CHAT_ID_VARIABLE);
+                    return Long.parseLong(variables.get(CHAT_ID_VARIABLE));
                 })
                 .doOnNext(chatId -> {
                     log.info("User {} subscribed to chat {} with subscription ids {}", user.getName(), chatId, subscriptionIds);
@@ -76,10 +74,10 @@ public class SimpBroker implements Broker<String, String, Principal> {
 
                     String chatUserDestination = subscriptionRegistry.chatUserDestination(chatId, user.getName());
 
-                    messageRepository.findForChat(chatId).stream().forEach(msg -> {
+                    messageRepository.findByChatId(chatId).stream().forEach(msg -> {
                         simpMessagingTemplate.convertAndSend(
                                 topicDestination(chatUserDestination),
-                                ChatMessage.of(msg.getId(), msg.getFrom(), msg.getMessage(), msg.getSentTs()));
+                                ChatMessage.of(msg.getId(), msg.getSender(), msg.getMessage(), msg.getSentTs()));
                     });
                 });
 
@@ -106,14 +104,14 @@ public class SimpBroker implements Broker<String, String, Principal> {
                 });
     }
 
-    private void broadcast(String chatId, Message message) {
+    private void broadcast(Long chatId, Message message) {
         subscriptionRegistry.chatDestinations(chatId).stream()
                 .forEach(destination -> {
                     simpMessagingTemplate.convertAndSend(
                             topicDestination(destination),
                             ChatMessage.of(
                                     message.getId(),
-                                    message.getFrom(),
+                                    message.getSender(),
                                     message.getMessage(),
                                     message.getSentTs()));
                 });

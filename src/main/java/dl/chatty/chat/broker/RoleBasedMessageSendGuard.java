@@ -18,11 +18,11 @@ public class RoleBasedMessageSendGuard implements MessageSendGuard, SecurityRole
     private final ChatRepository chatRepo;
 
     @Override
-    public Optional<Chat> messageChat(String chatId, Principal user) {
+    public Optional<Chat> messageChat(Long chatId, Principal user) {
         Authentication auth = (UsernamePasswordAuthenticationToken) user;
         boolean isEmployee = hasAuthority(auth, Roles.EMPLOYEE).isPresent();
 
-        return chatRepo.getOne(chatId)
+        return Optional.ofNullable(chatRepo.findOne(chatId))
                 .filter(c -> isEmployee || user.getName().equals(c.getCreatedBy()));
     }
 
