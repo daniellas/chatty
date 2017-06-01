@@ -14,7 +14,6 @@
     }
 
     function Service($rootScope, $state, RestSrv, AlertSrv) {
-
         this.login = function(username, password) {
             RestSrv.all('sec/login').customPOST({
                 username : username,

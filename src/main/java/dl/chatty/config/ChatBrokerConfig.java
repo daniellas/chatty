@@ -20,8 +20,6 @@ import dl.chatty.chat.repository.ChatRepository;
 import dl.chatty.chat.repository.MessageRepository;
 import dl.chatty.concurrency.ExecutorsProvider;
 import dl.chatty.id.IdSupplier;
-import dl.chatty.security.AuthenticationSupplier;
-import dl.chatty.security.UsernameSupplier;
 
 @Configuration
 public class ChatBrokerConfig {
@@ -58,7 +56,7 @@ public class ChatBrokerConfig {
     }
 
     @Bean
-    public MessageSendGuard messageSendGuard(ChatRepository chatRepository, AuthenticationSupplier authenticationSupplier, UsernameSupplier usernameSupplier) {
-        return new RoleBasedMessageSendGuard(chatRepository, authenticationSupplier, usernameSupplier);
+    public MessageSendGuard messageSendGuard(ChatRepository chatRepository) {
+        return new RoleBasedMessageSendGuard(chatRepository);
     }
 }

@@ -4,19 +4,19 @@ import static dl.chatty.SecurityTestUtil.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 
 public class CurrentCustomerUsernameEnforcerTest {
 
     private UsernameEnforcer enforcer = new CustomerUsernameEnforcer(new SecurityContextAuthenticationSupplier());
 
-    @Test(expected = AuthenticationCredentialsNotFoundException.class)
+    @Test(expected = InsufficientAuthenticationException.class)
     public void shouldFailOnNullAuthentication() {
         clearAuthentication();
         enforcer.apply(null);
     }
 
-    @Test(expected = AuthenticationCredentialsNotFoundException.class)
+    @Test(expected = InsufficientAuthenticationException.class)
     public void shouldFailOnAnonymousAuthentication() {
         setAnonymousAuthentication("anon", "anon", "ANON");
 

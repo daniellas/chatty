@@ -10,7 +10,7 @@ public class SecurityContextAuthenticationSupplier implements AuthenticationSupp
     @Override
     public Optional<Authentication> get() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
-                .flatMap(i -> Optional.ofNullable(i.getAuthentication()));
+                .flatMap(ctx -> Optional.ofNullable(ctx.getAuthentication()));
     }
 
 }

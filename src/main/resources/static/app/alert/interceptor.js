@@ -14,7 +14,6 @@
             return response;
         }
         this.responseError = function(response) {
-            consolelog('111');
             AlerSrv.showError(response);
 
             return $q.reject(response);

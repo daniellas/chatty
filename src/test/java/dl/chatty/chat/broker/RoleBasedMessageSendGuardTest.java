@@ -18,7 +18,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import dl.chatty.chat.entity.Chat;
 import dl.chatty.chat.repository.ChatRepository;
-import dl.chatty.security.AuthenticationSupplier;
 import dl.chatty.security.Roles;
 import dl.chatty.security.UsernameSupplier;
 
@@ -27,9 +26,6 @@ public class RoleBasedMessageSendGuardTest {
 
     @Mock
     private ChatRepository chatRepo;
-
-    @Mock
-    private AuthenticationSupplier authenticationSupplier;
 
     @Mock
     private UsernameSupplier usernameSupplier;
@@ -42,11 +38,10 @@ public class RoleBasedMessageSendGuardTest {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("employee", "password",
                 Arrays.asList(new SimpleGrantedAuthority(Roles.EMPLOYEE)));
 
-        when(authenticationSupplier.getOrThrowIfAnonymous()).thenReturn(auth);
         when(chatRepo.getOne(any())).thenReturn(Optional.of(Chat.of("id", "title", "customer", new Date())));
         when(usernameSupplier.justGet()).thenReturn("employee");
 
-        assertTrue(guard.messageChat("id").isPresent());
+        assertTrue(guard.messageChat("id", auth).isPresent());
     }
 
     @Test
@@ -54,11 +49,10 @@ public class RoleBasedMessageSendGuardTest {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("customer", "password",
                 Arrays.asList(new SimpleGrantedAuthority(Roles.CUSTOMER)));
 
-        when(authenticationSupplier.getOrThrowIfAnonymous()).thenReturn(auth);
         when(chatRepo.getOne(any())).thenReturn(Optional.of(Chat.of("id", "title", "customer", new Date())));
         when(usernameSupplier.justGet()).thenReturn("customer");
 
-        assertTrue(guard.messageChat("id").isPresent());
+        assertTrue(guard.messageChat("id", auth).isPresent());
     }
 
     @Test
@@ -66,11 +60,10 @@ public class RoleBasedMessageSendGuardTest {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("customer", "password",
                 Arrays.asList(new SimpleGrantedAuthority(Roles.CUSTOMER)));
 
-        when(authenticationSupplier.getOrThrowIfAnonymous()).thenReturn(auth);
         when(chatRepo.getOne(any())).thenReturn(Optional.of(Chat.of("id", "title", "customer1", new Date())));
         when(usernameSupplier.justGet()).thenReturn("customer");
 
-        assertFalse(guard.messageChat("id").isPresent());
+        assertFalse(guard.messageChat("id", auth).isPresent());
     }
 
 }

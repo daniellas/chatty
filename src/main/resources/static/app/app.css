@@ -24,4 +24,9 @@
 	min-height: 50px;
 	max-height: 300px;
 	overflow: auto;
+	margin-bottom: 10px;
+}
+
+.jumbotron-chatty {
+	margin-top: 10px;
 }

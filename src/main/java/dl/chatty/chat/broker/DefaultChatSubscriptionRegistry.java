@@ -11,6 +11,13 @@ import dl.chatty.concurrency.Locker;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This is not very efficient implementation although for serious applications
+ * chat subscriptions should be kept outside application eg. in database
+ * 
+ * @author Daniel Łaś
+ *
+ */
 public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry<String> {
 
     private static final String SEPARATOR = "/";

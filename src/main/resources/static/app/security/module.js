@@ -9,16 +9,25 @@
         SecuritySrv.userDetails().then(function(response) {
             SecuritySrv.setAuthenticated(true);
             SecuritySrv.setUserDetails(response.data.plain());
-            $transitions.onStart({
-                to : '**'
-            }, function(trans) {
-                if (trans.targetState().identifier() != 'login' && !SecuritySrv.isAuthenticated()) {
-                    return trans.router.stateService.target('login');
-                }
-            });
+            $state.go('chat/list');
         }, function() {
             $state.go('login');
         });
+        
+        $transitions.onStart({
+            to : '**'
+        }, function(trans) {
+            if (trans.targetState().identifier() != 'login') {
+                if (!SecuritySrv.isAuthenticated()) {
+                    return trans.router.stateService.target('login');
+                }
+            } else {
+                if (SecuritySrv.isAuthenticated()) {
+                    return trans.router.stateService.target('chat/list');
+                }
+            }
+        });
+
     }
 
 })();

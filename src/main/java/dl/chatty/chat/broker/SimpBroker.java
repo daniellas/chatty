@@ -43,10 +43,9 @@ public class SimpBroker implements Broker<String, String, Principal> {
 
     @Override
     public void onSend(String chatId, String message, Principal sender) {
-        Observable<Optional<Chat>> observable = Observable
-                .fromCallable(() -> {
-                    return messageSendGuard.messageChat(chatId);
-                });
+        Optional<Chat> guardedChat = messageSendGuard.messageChat(chatId, sender);
+
+        Observable<Optional<Chat>> observable = Observable.just(guardedChat);
 
         subscribeOnShedulerIfAsync(observable)
                 .filter(Optional::isPresent)
