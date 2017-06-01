@@ -20,3 +20,10 @@ logging:
 endpoints:
   jmx:
     enabled: true
+
+db:
+  url: jdbc:h2:file:./chatty
+  username: hrtools
+  password: hrtools
+  maxPoolSize: 20
+    

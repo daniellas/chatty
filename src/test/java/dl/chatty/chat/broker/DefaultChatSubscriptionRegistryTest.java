@@ -12,11 +12,12 @@ import org.junit.Test;
 public class DefaultChatSubscriptionRegistryTest {
 
     private static final String SUB_ID = "sub-0";
+    
     private ChatSubscriptionRegistry<String> registry;
 
     @Before
     public void before() {
-        registry = new DefaultChatSubscriptionRegistry();
+        registry = new DefaultChatSubscriptionRegistry(null);
 
         registry.create("chat1", "user1", Arrays.asList(SUB_ID));
         registry.create("chat1", "user2", Arrays.asList(SUB_ID));

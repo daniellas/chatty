@@ -2,10 +2,13 @@ package dl.chatty.chat.entity;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
+@Entity
 @RequiredArgsConstructor(staticName = "of")
 @EqualsAndHashCode(of = { "id" })
 @Data

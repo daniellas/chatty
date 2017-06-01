@@ -17,6 +17,7 @@ import dl.chatty.chat.broker.event.ChatDisconnectEventListener;
 import dl.chatty.chat.broker.event.ChatSubscribeEventListener;
 import dl.chatty.chat.broker.event.ChatUnsubscribeEventListener;
 import dl.chatty.chat.repository.ChatRepository;
+import dl.chatty.chat.repository.ChatSubscriptionRepository;
 import dl.chatty.chat.repository.MessageRepository;
 import dl.chatty.concurrency.ExecutorsProvider;
 import dl.chatty.id.IdSupplier;
@@ -25,8 +26,8 @@ import dl.chatty.id.IdSupplier;
 public class ChatBrokerConfig {
 
     @Bean
-    public ChatSubscriptionRegistry<String> defaultChatSubscriptionRegistry() {
-        return new DefaultChatSubscriptionRegistry();
+    public ChatSubscriptionRegistry<String> defaultChatSubscriptionRegistry(ChatSubscriptionRepository chatSubscriptionRepository) {
+        return new DefaultChatSubscriptionRegistry(chatSubscriptionRepository);
     }
 
     @Bean
