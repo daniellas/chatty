@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import dl.chatty.SecuredMvcTestBase;
+import dl.chatty.SecurityTestUtil;
 
 @WebMvcTest(UserDetailsController.class)
 public class UserDetailsControllerTest extends SecuredMvcTestBase {
@@ -25,7 +26,7 @@ public class UserDetailsControllerTest extends SecuredMvcTestBase {
         mvc.perform(post("/sec/userdetails")).andExpect(status().isForbidden());
     }
 
-    @WithMockUser(username = CUSTOMER_USERNAME, password = PASSWORD)
+    @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD)
     @Test
     public void shouldReturnUserDetails() throws Exception {
         mvc.perform(post("/sec/userdetails"))

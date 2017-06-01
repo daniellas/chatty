@@ -21,5 +21,4 @@ public class ChatMessagingController {
         broker.onSend(chatId, message, sender);
     }
 
-
 }

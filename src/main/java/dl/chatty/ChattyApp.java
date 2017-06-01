@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import dl.chatty.chat.controller.ChatMessagingController;
 import dl.chatty.config.WebSocketConfig;
 
-@SpringBootApplication(scanBasePackageClasses = { WebSocketConfig.class, ChatMessagingController.class })
+@SpringBootApplication(scanBasePackageClasses = { WebSocketConfig.class, ChatMessagingController.class})
 public class ChattyApp {
 
     public static void main(String[] args) {

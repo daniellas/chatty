@@ -126,6 +126,11 @@
             <artifactId>snakeyaml</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-core</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -176,19 +181,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <!-- <plugin> -->
-            <!-- <groupId>org.scalatest</groupId> -->
-            <!-- <artifactId>scalatest-maven-plugin</artifactId> -->
-            <!-- <version>1.0</version> -->
-            <!-- <executions> -->
-            <!-- <execution> -->
-            <!-- <id>test</id> -->
-            <!-- <goals> -->
-            <!-- <goal>test</goal> -->
-            <!-- </goals> -->
-            <!-- </execution> -->
-            <!-- </executions> -->
-            <!-- </plugin> -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -223,25 +215,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin> -->
-            <!-- <groupId>net.alchim31.maven</groupId> -->
-            <!-- <artifactId>scala-maven-plugin</artifactId> -->
-            <!-- <version>3.2.2</version> -->
-            <!-- <executions> -->
-            <!-- <execution> -->
-            <!-- <goals> -->
-            <!-- <goal>testCompile</goal> -->
-            <!-- </goals> -->
-            <!-- <configuration> -->
-            <!-- <displayCmd>false</displayCmd> -->
-            <!-- <args> -->
-            <!-- <arg>-dependencyfile</arg> -->
-            <!-- <arg>${project.build.directory}/.scala_dependencies</arg> -->
-            <!-- </args> -->
-            <!-- </configuration> -->
-            <!-- </execution> -->
-            <!-- </executions> -->
-            <!-- </plugin> -->
         </plugins>
 
     </build>
@@ -257,7 +230,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <!-- <version>2.19.1</version> -->
                         <configuration>
                             <includes>
                                 <include>**/*ITest.java</include>

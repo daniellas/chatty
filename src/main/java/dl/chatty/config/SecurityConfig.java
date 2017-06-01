@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.chatty.config.properties.SecurityProperties;
 import dl.chatty.security.AngularUsernamePasswordAuthenticationFilter;
 import dl.chatty.security.CurrentUsernameSupplier;
-import dl.chatty.security.Roles;
 import dl.chatty.security.SecurityContextCurrentUsernameSupplier;
 import dl.chatty.security.UserDetailsController;
 import dl.chatty.security.UserDetailsView;
@@ -105,10 +104,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return Stream.of(
                 User.withUsername(securityProperties.getCustomerUsername())
                         .password(securityProperties.getCustomerPassword())
-                        .roles(Roles.CUSTOMER).build(),
+                        .roles(securityProperties.getCustomerRole()).build(),
                 User.withUsername(securityProperties.getEmployeeUsername())
                         .password(securityProperties.getEmployeePassword())
-                        .roles(Roles.EMPLOYEE).build())
+                        .roles(securityProperties.getEmployeeRole()).build(),
+                User.withUsername(securityProperties.getAdminUsername())
+                        .password(securityProperties.getAdminPassword())
+                        .roles(securityProperties.getAdminRole()).build())
                 .collect(Collectors.toList());
     }
 }

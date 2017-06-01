@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Roles {
-    public static final String CUSTOMER = "CUSTOMER";
-    public static final String EMPLOYEE = "EMPLOYEE";
+    public static final String CUSTOMER = "ROLE_CUSTOMER";
+    public static final String EMPLOYEE = "ROLE_EMPLOYEE";
+    public static final String ACTUATOR = "ROLE_ACTUATOR";
 }

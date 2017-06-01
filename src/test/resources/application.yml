@@ -11,7 +11,7 @@ chatty:
     adminRole: ACTUATOR
   repository:
     file:
-      rootPath: /tmp/reporoot
+      rootPath: target/reporoot
 
 logging:
   level:

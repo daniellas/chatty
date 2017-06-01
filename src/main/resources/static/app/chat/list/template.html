@@ -3,7 +3,7 @@
         <h1>Chats</h1>
     </div>
     <div ng-if="initialized">
-        <div class="row">
+        <div class="row" ng-if="chats.length">
             <div class="col-md-12">
                 <div class="form-group">
                     <button class="btn btn-success" ui-sref="chat/create">

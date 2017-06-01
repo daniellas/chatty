@@ -29,7 +29,7 @@ public class LoginITest extends IntegrationTestBase {
                 UserDetailsView.class);
 
         assertEquals(securityProperties.getCustomerUsername(), userDetails.getUsername());
-        assertThat(userDetails.getRoles(), containsInAnyOrder(springRoleName(Roles.CUSTOMER)));
+        assertThat(userDetails.getRoles(), containsInAnyOrder(Roles.CUSTOMER));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class LoginITest extends IntegrationTestBase {
                 UserDetailsView.class);
 
         assertEquals(securityProperties.getEmployeeUsername(), userDetails.getUsername());
-        assertThat(userDetails.getRoles(), containsInAnyOrder(springRoleName(Roles.EMPLOYEE)));
+        assertThat(userDetails.getRoles(), containsInAnyOrder(Roles.EMPLOYEE));
     }
 
 }

@@ -15,6 +15,7 @@ import dl.chatty.chat.broker.event.ChatDisconnectEventListener;
 import dl.chatty.chat.broker.event.ChatSubscribeEventListener;
 import dl.chatty.chat.broker.event.ChatUnsubscribeEventListener;
 import dl.chatty.chat.repository.MessageRepository;
+import dl.chatty.concurrency.ExecutorsProvider;
 import dl.chatty.id.IdSupplier;
 
 @Configuration
@@ -30,8 +31,9 @@ public class ChatBrokerConfig {
             SimpMessagingTemplate simpMessagingTemplate,
             IdSupplier<String> messageIdSupplier,
             MessageRepository messageRepo,
-            ChatSubscriptionRegistry<String> subscriptionRegistry) {
-        return new SimpBroker(simpMessagingTemplate, messageRepo, new AntPathMatcher("/"), subscriptionRegistry);
+            ChatSubscriptionRegistry<String> subscriptionRegistry,
+            ExecutorsProvider executorsProvider) {
+        return new SimpBroker(simpMessagingTemplate, messageRepo, new AntPathMatcher("/"), subscriptionRegistry, executorsProvider);
     }
 
     @Bean

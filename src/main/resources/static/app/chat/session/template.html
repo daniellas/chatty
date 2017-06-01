@@ -11,12 +11,12 @@
         <div class="col-md-12">
             <form name="frm">
                 <div class="form-group">
-                    <p class="help-block">
-                        Describe an issue and press <strong>Create</strong> button
-                    </p>
                     <input class="form-control input-lg" ng-model="chat.title" placeholder="Enter chat title with issue description"
                         required btr-validation>
                 </div>
+                <p class="help-block text-center">
+                    Describe an issue and press <strong>Create</strong> button
+                </p>
                 <div class="form-group chatty-form-buttons">
                     <button class="btn btn-success btn-lg" ng-disabled="frm.$invalid" ng-click="createChat(chat)">
                         <i class="fa fa-plus"></i>
@@ -34,7 +34,7 @@
                         <strong>There are no messages in this chat</strong>
                     </div>
                     <div class="list-group" ng-if="messages.length">
-                        <div class="list-group-item" ng-repeat="item in messages" title="{{messageTitle(item)}}">{{item.message}}</div>
+                        <div class="list-group-item" ng-class="messageCls(item)" ng-repeat="item in messages" title="{{messageTitle(item)}}">{{item.message}}</div>
                     </div>
                 </div>
             </div>

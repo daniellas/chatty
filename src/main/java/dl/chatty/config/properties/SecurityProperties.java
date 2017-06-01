@@ -11,6 +11,11 @@ import lombok.Setter;
 public class SecurityProperties {
     private String customerUsername;
     private String customerPassword;
+    private String customerRole;
     private String employeeUsername;
     private String employeePassword;
+    private String employeeRole;
+    private String adminUsername;
+    private String adminPassword;
+    private String adminRole;
 }

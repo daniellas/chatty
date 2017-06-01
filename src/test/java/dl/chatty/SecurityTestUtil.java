@@ -9,6 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityTestUtil {
 
+    public static final String CUSTOMER_USERNAME = "customer";
+    public static final String EMPLOYEE_USERNAME = "employee";
+    public static final String PASSWORD = "password";
+
     public static void setAuthentication(String username, String password, String ...roles) {
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken(

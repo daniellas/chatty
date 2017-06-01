@@ -21,7 +21,4 @@ public abstract class IntegrationTestBase {
         return "http://localhost:" + serverPort;
     }
 
-    protected String springRoleName(String role) {
-        return "ROLE_" + role;
-    }
 }

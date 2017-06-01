@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class FileChatRepository implements ChatRepository, InitializingBean {
+public class FileChatRepository implements ChatRepository, InitializingBean, ItemFolderProvider {
 
     private static final String CHAT_FOLDER_SEGMENT_SEPARATOR = "_";
 
@@ -77,7 +77,8 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
 
     @Getter
     @RequiredArgsConstructor
-    private static class SearchItem {
+    static class SearchItem {
+        private static int VALID_SEGMENTS_COUNT = 2;
         private final int segmentsCount;
         private final String chatId;
         private final String creator;
@@ -85,16 +86,17 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
 
         public static SearchItem of(Path path) {
             String[] segments = path.getFileName().toString().split(CHAT_FOLDER_SEGMENT_SEPARATOR);
+            boolean isvalid = segments.length == VALID_SEGMENTS_COUNT;
 
             return new SearchItem(
                     segments.length,
-                    segments.length == 2 ? segments[0] : null,
-                    segments.length == 2 ? segments[1] : null,
+                    isvalid ? segments[0] : null,
+                    isvalid ? segments[1] : null,
                     path);
         }
 
         public static boolean isValid(SearchItem item) {
-            return item.segmentsCount == 2;
+            return item.segmentsCount == VALID_SEGMENTS_COUNT;
         }
     }
 
@@ -112,7 +114,7 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
                 .toString();
     }
 
-    public Optional<String> chatFolderAbsolutePath(String chatId) {
+    private Optional<String> chatFolderAbsolutePath(String chatId) {
         return getOne(chatId).map(c -> new StringBuilder(rootPath)
                 .append("/")
                 .append(c.getId())
@@ -135,6 +137,11 @@ public class FileChatRepository implements ChatRepository, InitializingBean {
             return new IllegalStateException("Failed to create root folder: " + rootPath);
         });
         log.info("Created file repository root folder: {}", path.toAbsolutePath());
+    }
+
+    @Override
+    public Optional<String> getFolder(String item) {
+        return chatFolderAbsolutePath(item);
     }
 
 }

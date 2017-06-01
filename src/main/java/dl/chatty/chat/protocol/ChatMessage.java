@@ -2,6 +2,8 @@ package dl.chatty.chat.protocol;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatMessage {
     private final String id;
     private final String from;
+    @NotNull
     private final String message;
     private final Date sentTs;
 }

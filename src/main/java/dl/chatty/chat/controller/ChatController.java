@@ -3,6 +3,7 @@ package dl.chatty.chat.controller;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class ChatController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public DeferredResult<ChatView> create(@RequestBody ChatView chat) {
+    public DeferredResult<ChatView> create(@RequestBody @Validated ChatView chat) {
         return DeferredResultSubscriber.subscribe(chatStreams.create(chat));
     }
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,6 +20,8 @@ import dl.chatty.chat.entity.Message;
 
 public class FileMessageRepositoryTest {
 
+    private static final String SEGMENT_SEPARATOR = "_";
+
     private static final String CHAT_ID = "chatid";
 
     private static final String CHAT_CREATOR = "customer";
@@ -27,6 +30,8 @@ public class FileMessageRepositoryTest {
 
     private static final String MESSAGE_ID = "messageid";
 
+    private static final Date CREATE_DATE = new Date();
+
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -34,9 +39,13 @@ public class FileMessageRepositoryTest {
 
     @Before
     public void before() {
-        repo = new FileMessageRepository(this::messageIdSupplier, this::chatFolderSupplier, FileChatRepository.TITLE_FILE_NAME);
+        repo = new FileMessageRepository(
+                this::messageIdSupplier,
+                this::chatFolderSupplier,
+                this::dateTimeSupplier,
+                FileChatRepository.TITLE_FILE_NAME);
 
-        path(CHAT_ID + "_" + CHAT_CREATOR).andThen(mkdir())
+        path(CHAT_ID + SEGMENT_SEPARATOR + CHAT_CREATOR).andThen(mkdir())
                 .andThen(appendIfPresent(FileChatRepository.TITLE_FILE_NAME))
                 .andThen(mkfileIfPresent())
                 .andThen(writeIfPresent("Chat title"))
@@ -98,10 +107,9 @@ public class FileMessageRepositoryTest {
     public void shouldFindAllMessages() {
         AtomicLong idGenerator = new AtomicLong();
         FileMessageRepository idGeneratingRepo = new FileMessageRepository(
-                () -> {
-                    return Long.valueOf(idGenerator.incrementAndGet()).toString();
-                },
+                () -> Long.valueOf(idGenerator.incrementAndGet()).toString(),
                 this::chatFolderSupplier,
+                this::dateTimeSupplier,
                 FileChatRepository.TITLE_FILE_NAME);
 
         idGeneratingRepo.create(CHAT_ID, Message.of(null, "Chat message1", null, null), "customer");
@@ -115,7 +123,18 @@ public class FileMessageRepositoryTest {
     }
 
     private String messageFilepath() {
-        return absolutePath(tmp.getRoot()) + "/" + CHAT_ID + "_" + CHAT_CREATOR + "/" + MESSAGE_ID + "_" + MESSAGE_SENDER;
+        return new StringBuilder(absolutePath(tmp.getRoot()))
+                .append("/")
+                .append(CHAT_ID)
+                .append(SEGMENT_SEPARATOR)
+                .append(CHAT_CREATOR)
+                .append("/")
+                .append(MESSAGE_ID)
+                .append(SEGMENT_SEPARATOR)
+                .append(CREATE_DATE.getTime())
+                .append(SEGMENT_SEPARATOR)
+                .append(MESSAGE_SENDER)
+                .toString();
     }
 
     private String messageIdSupplier() {
@@ -123,6 +142,10 @@ public class FileMessageRepositoryTest {
     }
 
     private Optional<String> chatFolderSupplier(String chatId) {
-        return Optional.of(absolutePath(tmp.getRoot()) + "/" + chatId + "_" + CHAT_CREATOR);
+        return Optional.of(absolutePath(tmp.getRoot()) + "/" + chatId + SEGMENT_SEPARATOR + CHAT_CREATOR);
+    }
+
+    private Date dateTimeSupplier() {
+        return CREATE_DATE;
     }
 }
