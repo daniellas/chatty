@@ -51,7 +51,7 @@ public class SimpBrokerTest {
     private Map<String, String> uriVariables;
 
     @Mock
-    private MessageSendGuard messageSendGuard;
+    private MessageSendGuard<Long, Principal> messageSendGuard;
 
     @InjectMocks
     private SimpBroker broker;

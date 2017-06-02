@@ -13,7 +13,7 @@ import dl.chatty.security.SecurityRoleChecker;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class RoleBasedMessageSendGuard implements MessageSendGuard, SecurityRoleChecker {
+public class RoleBasedMessageSendGuard implements MessageSendGuard<Long, Principal>, SecurityRoleChecker {
 
     private final ChatRepository chatRepo;
 

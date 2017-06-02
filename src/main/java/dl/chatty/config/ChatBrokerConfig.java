@@ -35,7 +35,7 @@ public class ChatBrokerConfig {
             MessageRepository messageRepo,
             ChatSubscriptionRegistry<Long> subscriptionRegistry,
             ExecutorsProvider executorsProvider,
-            MessageSendGuard messageSendGuard) {
+            MessageSendGuard<Long, Principal> messageSendGuard) {
         return new SimpBroker(simpMessagingTemplate, messageRepo, new AntPathMatcher("/"), subscriptionRegistry, executorsProvider, messageSendGuard);
     }
 
@@ -55,7 +55,7 @@ public class ChatBrokerConfig {
     }
 
     @Bean
-    public MessageSendGuard messageSendGuard(ChatRepository chatRepository) {
+    public MessageSendGuard<Long, Principal> messageSendGuard(ChatRepository chatRepository) {
         return new RoleBasedMessageSendGuard(chatRepository);
     }
 }

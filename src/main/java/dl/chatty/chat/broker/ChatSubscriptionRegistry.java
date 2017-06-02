@@ -3,12 +3,12 @@ package dl.chatty.chat.broker;
 import java.util.Collection;
 
 /**
- * Chat subscriptions management
+ * Chat subscriptions registry 
  * 
  * @author Daniel Łaś
  *
  * @param <I>
- *            chat dentifier type
+ *            chat identifier type
  */
 public interface ChatSubscriptionRegistry<I> {
 

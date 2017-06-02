@@ -9,7 +9,7 @@ Demo version is deployed on Heroku and available under link: https://tranquil-re
 # Architecture
 
 Chatty uses STOMP over WebSocket protocol for chat messages processing. I have choosen STOP protocol because it is supported out 
-of the box by Spring Framework used as technology base. For more sophisticated use cases it would be worth to consider XMPP protocol but due to limited time
+of the box by Spring Framework used basa framework. For more sophisticated use cases it would be worth to consider XMPP protocol but due to limited time
 and budget it was much easier to use STOMP.
 
 Chatty manages internally STOMP topics subscriptions for proper messages routing.

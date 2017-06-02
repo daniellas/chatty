@@ -7,7 +7,7 @@ import dl.chatty.concurrency.ConfigurableExecutorsProvider;
 import dl.chatty.concurrency.ExecutorsProvider;
 
 @Configuration
-public class ConcurencyConfig {
+public class ExecutorsConfig {
 
     @Bean
     public ExecutorsProvider executorsProvider() {

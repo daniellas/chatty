@@ -17,7 +17,7 @@ public abstract class ConstructorPrivacyTestBase {
     public Class<?> testedClass;
 
     @Test
-    public void testPrivacy() throws NoSuchMethodException, SecurityException {
+    public void shouldBePrivate() throws NoSuchMethodException, SecurityException {
         Constructor<?> constructor = testedClass.getDeclaredConstructor();
         Assert.assertTrue(Modifier.isPrivate(constructor.getModifiers()));
     }

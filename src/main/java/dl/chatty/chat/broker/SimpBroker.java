@@ -37,7 +37,7 @@ public class SimpBroker implements Broker<Long, String, Principal> {
 
     private final ExecutorsProvider executorsProvider;
 
-    private final MessageSendGuard messageSendGuard;
+    private final MessageSendGuard<Long, Principal> messageSendGuard;
 
     boolean asyncObservable = true;
 
