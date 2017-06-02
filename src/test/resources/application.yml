@@ -9,9 +9,6 @@ chatty:
     adminUsername: admin
     adminPassword: admin
     adminRole: ACTUATOR
-  repository:
-    file:
-      rootPath: target/reporoot
 
 logging:
   level:

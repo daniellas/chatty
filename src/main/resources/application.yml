@@ -9,9 +9,6 @@ chatty:
     adminUsername: admin
     adminPassword: admin
     adminRole: ACTUATOR
-  repository:
-    file:
-      rootPath: /tmp/reporoot
 
 logging:
   level:
@@ -26,4 +23,6 @@ db:
   username: hrtools
   password: hrtools
   maxPoolSize: 20
-    
+
+server:
+  port: 8080
