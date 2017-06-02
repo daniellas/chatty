@@ -56,6 +56,8 @@ Standard configuration properties are stored in **src/main/resources/application
 environment variables.  
 
 # Building
+You need to have **maven 3** and **Java 8 JDK** installed to build Chatty.
+
 To build Chatty just enter main project folder and run **mvn clean install**. This will build executable jar **target/chatty-[version].jar**.
 
 # Testing
