@@ -1,8 +1,10 @@
 package dl.chatty.chat.broker;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
@@ -106,14 +108,11 @@ public class SimpBroker implements Broker<Long, String, Principal> {
         accessor.setSessionId(sessionId);
         accessor.setLeaveMutable(true);
 
-        messageRepository.findByChatIdOrderById(chatId).stream()
-                .forEachOrdered(msg -> {
-                    simpMessagingTemplate.convertAndSendToUser(
-                            user,
-                            userChatDestination(chatId),
-                            ChatMessage.of(msg.getId(), msg.getSender(), msg.getMessage(), msg.getSentTs()),
-                            accessor.getMessageHeaders());
-                });
+        List<ChatMessage> messages = messageRepository.findByChatIdOrderById(chatId).stream()
+                .map(m -> ChatMessage.of(m.getId(), m.getSender(), m.getMessage(), m.getSentTs()))
+                .collect(Collectors.toList());
+
+        simpMessagingTemplate.convertAndSendToUser(user, userChatDestination(chatId), messages, accessor.getMessageHeaders());
     }
 
     private void broadcast(Long chatId, Message message) {

@@ -19,7 +19,13 @@
         }
 
         function onMessage(message) {
-            $scope.messages.push(message);
+            if (angular.isArray(message)) {
+                message.forEach(function(elem) {
+                    $scope.messages.push(elem);
+                });
+            } else {
+                $scope.messages.push(message);
+            }
             $scope.$evalAsync();
             scrollBottom();
         }
