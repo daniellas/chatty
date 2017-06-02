@@ -55,9 +55,10 @@ There is also JMX-HTTP bridge available via Jolokia under **/jolokia** path. To 
 Standard configuration properties are stored in **src/main/resources/application.yml** file. Configuration properties can be overriden by command line arguments or
 environment variables.  
 
-# Building
-You need to have **maven 3** and **Java 8 JDK** installed to build Chatty.
+# Notes on building, testing and runing
+You need  **maven 3** and **Java 8 JDK** installed to build Chatty or run tests.
 
+# Building
 To build Chatty just enter main project folder and run **mvn clean install**. This will build executable jar **target/chatty-[version].jar**.
 
 # Testing
