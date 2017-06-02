@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.AntPathMatcher;
 
@@ -122,7 +123,7 @@ public class SimpBrokerTest {
         broker.onSubscribe("/topic/messages/1/user1", principal, "sid");
         verify(subscriptionRegistry).create(1l, "user1", "sid");
         verify(messageRepository).findByChatIdOrderById(1l);
-        verify(simpMessagetemplate).convertAndSendToUser(anyString(), anyString(), any(ChatMessage.class));
+        verify(simpMessagetemplate).convertAndSendToUser(anyString(), anyString(), any(ChatMessage.class), any(MessageHeaders.class));
     }
 
     @Test
