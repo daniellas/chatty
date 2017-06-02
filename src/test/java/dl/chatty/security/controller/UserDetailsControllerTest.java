@@ -1,4 +1,4 @@
-package dl.chatty.security;
+package dl.chatty.security.controller;
 
 import static org.hamcrest.core.Is.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import dl.chatty.SecuredMvcTestBase;
 import dl.chatty.SecurityTestUtil;
+import dl.chatty.security.controller.UserDetailsController;
 
 @WebMvcTest(UserDetailsController.class)
 public class UserDetailsControllerTest extends SecuredMvcTestBase {

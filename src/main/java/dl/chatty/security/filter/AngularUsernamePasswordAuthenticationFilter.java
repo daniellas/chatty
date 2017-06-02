@@ -1,4 +1,4 @@
-package dl.chatty.security;
+package dl.chatty.security.filter;
 
 import java.io.IOException;
 
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dl.chatty.security.UserDetailsView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -55,7 +56,7 @@ public class AngularUsernamePasswordAuthenticationFilter extends AbstractAuthent
 
     @AllArgsConstructor
     @Getter
-    static class Credentials {
+    public static class Credentials {
         private String username;
         private String password;
 

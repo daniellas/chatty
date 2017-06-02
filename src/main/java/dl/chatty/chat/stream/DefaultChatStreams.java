@@ -28,9 +28,7 @@ public class DefaultChatStreams implements ChatStreams {
     @Override
     public Observable<Collection<ChatView>> findAll() {
         return Observable
-                .fromCallable(() -> {
-                    return chatRepo.findByCreatedBy(usernameEnforcer.apply(null));
-                })
+                .just(chatRepo.findByCreatedBy(usernameEnforcer.apply(null)))
                 .map(ChatMapper::toViewList);
     }
 

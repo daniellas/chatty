@@ -24,13 +24,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dl.chatty.config.properties.SecurityProperties;
-import dl.chatty.security.AngularUsernamePasswordAuthenticationFilter;
 import dl.chatty.security.AuthenticationSupplier;
 import dl.chatty.security.CustomerUsernameEnforcer;
 import dl.chatty.security.UsernameSupplier;
+import dl.chatty.security.controller.UserDetailsController;
+import dl.chatty.security.filter.AngularUsernamePasswordAuthenticationFilter;
 import dl.chatty.security.SecurityContextAuthenticationSupplier;
 import dl.chatty.security.SecurityContextUsernameSupplier;
-import dl.chatty.security.UserDetailsController;
 import dl.chatty.security.UserDetailsView;
 import dl.chatty.security.UsernameEnforcer;
 

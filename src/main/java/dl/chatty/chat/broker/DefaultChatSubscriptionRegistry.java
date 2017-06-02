@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import dl.chatty.chat.entity.ChatSubscription;
 import dl.chatty.chat.repository.ChatSubscriptionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry<Long> {
@@ -19,7 +21,11 @@ public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry
 
     @Override
     public void create(Long chatId, String user, Collection<String> subscriptionIds) {
-        chatSubscriptionRepository.save(ChatSubscription.of(null, user, chatId, subscriptionIds.toString()));
+        if (chatSubscriptionRepository.findByChatAndUserAndSub(chatId, user, subscriptionIds.toString()) == null) {
+            chatSubscriptionRepository.save(ChatSubscription.of(null, user, chatId, subscriptionIds.toString()));
+        } else {
+            log.warn("Subscription {}/{}/{} already exists, skipping creation", chatId, user, subscriptionIds);
+        }
     }
 
     @Override

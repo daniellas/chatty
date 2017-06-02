@@ -74,7 +74,7 @@ public class SimpBroker implements Broker<Long, String, Principal> {
 
                     String chatUserDestination = subscriptionRegistry.chatUserDestination(chatId, user.getName());
 
-                    messageRepository.findByChatId(chatId).stream().forEach(msg -> {
+                    messageRepository.findByChatIdOrderById(chatId).stream().forEach(msg -> {
                         simpMessagingTemplate.convertAndSend(
                                 topicDestination(chatUserDestination),
                                 ChatMessage.of(msg.getId(), msg.getSender(), msg.getMessage(), msg.getSentTs()));

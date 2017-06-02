@@ -1,4 +1,4 @@
-package dl.chatty.security;
+package dl.chatty.security.filter;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -9,7 +9,9 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import dl.chatty.IntegrationTestBase;
 import dl.chatty.config.properties.SecurityProperties;
-import dl.chatty.security.AngularUsernamePasswordAuthenticationFilter.Credentials;
+import dl.chatty.security.Roles;
+import dl.chatty.security.UserDetailsView;
+import dl.chatty.security.filter.AngularUsernamePasswordAuthenticationFilter.Credentials;
 
 public class LoginITest extends IntegrationTestBase {
 

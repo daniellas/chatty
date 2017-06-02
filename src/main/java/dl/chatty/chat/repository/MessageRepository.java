@@ -8,5 +8,5 @@ import dl.chatty.chat.entity.Message;
 
 public interface MessageRepository extends JpaRepository<Message, Long>{
 
-    Collection<Message> findByChatId(Long chatId);
+    Collection<Message> findByChatIdOrderById(Long chatId);
 }

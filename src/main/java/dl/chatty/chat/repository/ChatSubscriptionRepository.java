@@ -8,6 +8,8 @@ import dl.chatty.chat.entity.ChatSubscription;
 
 public interface ChatSubscriptionRepository extends JpaRepository<ChatSubscription, Long> {
 
+    ChatSubscription findByChatAndUserAndSub(Long chat, String user, String sub);
+
     List<ChatSubscription> findByUserAndSub(String user, String sub);
 
     List<ChatSubscription> findByUser(String user);

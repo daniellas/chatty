@@ -106,7 +106,7 @@ public class SimpBrokerTest {
 
         broker.onSubscribe(Arrays.asList("sub-1"), "/chat1", principal);
         verify(subscriptionRegistry, never()).create(any(), any(), any());
-        verify(messageRepository, never()).findByChatId(any());
+        verify(messageRepository, never()).findByChatIdOrderById(any());
     }
 
     @Test
@@ -115,14 +115,14 @@ public class SimpBrokerTest {
         when(destinationMatcher.extractUriTemplateVariables(any(), any())).thenReturn(uriVariables);
         when(uriVariables.get(any())).thenReturn("1");
         when(principal.getName()).thenReturn("user1");
-        when(messageRepository.findByChatId(any())).thenReturn(Arrays.asList(Message.of(null, null, null, null, null)));
+        when(messageRepository.findByChatIdOrderById(any())).thenReturn(Arrays.asList(Message.of(null, null, null, null, null)));
 
         List<String> subIds = Arrays.asList("sub-1");
 
         broker.onSubscribe(subIds, "/topic/messages/1/user1", principal);
         verify(subscriptionRegistry).create(1l, "user1", subIds);
         verify(subscriptionRegistry).chatUserDestination(1l, "user1");
-        verify(messageRepository).findByChatId(1l);
+        verify(messageRepository).findByChatIdOrderById(1l);
         verify(simpMessagetemplate).convertAndSend(anyString(), any(ChatMessage.class));
     }
 
