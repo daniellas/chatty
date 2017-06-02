@@ -1,8 +1,10 @@
 package dl.chatty.security.controller;
 
 import static org.hamcrest.core.Is.*;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class UserDetailsControllerTest extends SecuredMvcTestBase {
     @WithMockUser(username = SecurityTestUtil.CUSTOMER_USERNAME, password = SecurityTestUtil.PASSWORD)
     @Test
     public void shouldReturnUserDetails() throws Exception {
-        mvc.perform(post("/sec/userdetails"))
+        mvc.perform(post("/sec/userdetails").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username", is("customer")));
     }

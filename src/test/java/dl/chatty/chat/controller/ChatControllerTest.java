@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import static org.hamcrest.Matchers.*;
 
@@ -77,6 +78,7 @@ public class ChatControllerTest extends SecuredMvcTestBase {
     @Test
     public void shouldReturnValidationErrorOnNullTitle() throws Exception {
         mvc.perform(post("/chats")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(mapper.writeValueAsString(new ChatView(null, null, null, null))))
                 .andExpect(status().isBadRequest());
@@ -106,6 +108,7 @@ public class ChatControllerTest extends SecuredMvcTestBase {
         when(chatStreams.create(any())).thenReturn(Observable.just(new ChatView(1l, "title", "user", new Date())));
 
         MvcResult result = mvc.perform(post("/chats")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(mapper.writeValueAsString(new ChatView(null, "title", null, null))))
                 .andExpect(request().asyncStarted())
