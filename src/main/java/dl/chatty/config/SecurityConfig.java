@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -84,8 +85,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private void configureCsrf(HttpSecurity http) throws Exception {
-        // TODO Enable and support on UI side
-        http.csrf().disable();
+        http.csrf().ignoringAntMatchers(LOGIN_URL);
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     private void configureSession(HttpSecurity http) throws Exception {
