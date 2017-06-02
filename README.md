@@ -1,6 +1,6 @@
 # Introduction
 
-This is simple chat web application named *Chatty*.
+This is simple chat web application named **Chatty**.
 
 # Online demo
 
