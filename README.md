@@ -14,7 +14,7 @@ and budget it was much easier to use STOMP.
 
 Chatty manages internally STOMP topics subscriptions for proper messages routing.
 
-There is simple REST API (maturity level 2) exposed for chats retrieval and creation.
+There is simple REST API exposed for chats retrieval and creation.
 
 Chatty uses **RxJava** for asynchronous processing. I have choosen this approach because asynchronous applications scale well.
 
