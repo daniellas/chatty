@@ -82,7 +82,7 @@
             if (message.from == SecuritySrv.getCurrentUsername()) {
                 return 'list-group-item-info';
             }
-            
+
             return 'list-group-item-success';
         };
 
