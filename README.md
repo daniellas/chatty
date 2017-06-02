@@ -12,7 +12,7 @@ Chatty uses STOMP over WebSocket protocol for chat messages processing. I have c
 of the box by Spring Framework used as base framework. For more sophisticated use cases it would be worth to consider XMPP protocol but due to limited time
 and budget it was much easier to use STOMP.
 
-Chatty manages internally STOMP topics subscriptions for proper messages routing.
+Chatty manages internally STOMP user subscriptions for proper messages routing.
 
 There is simple REST API exposed for chats retrieval and creation.
 
