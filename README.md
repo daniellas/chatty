@@ -34,6 +34,7 @@ Chatty uses **RxJava** for asynchronous processing. I have choosen this approach
 * Spring Test
 * JUnit
 * Mockito
+* Lombok
 
 ## Front-end
 * AngularJS 1.6

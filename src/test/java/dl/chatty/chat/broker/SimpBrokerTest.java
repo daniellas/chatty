@@ -25,16 +25,12 @@ import dl.chatty.chat.entity.Message;
 import dl.chatty.chat.protocol.ChatMessage;
 import dl.chatty.chat.repository.MessageRepository;
 import dl.chatty.concurrency.ExecutorsProvider;
-import dl.chatty.datetime.DateTimeSupplier;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpBrokerTest {
 
     @Mock
     private SimpMessagingTemplate simpMessagetemplate;
-
-    @Mock
-    private DateTimeSupplier dateTimeSupplier;
 
     @Mock
     private Principal principal;
