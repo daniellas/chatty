@@ -4,7 +4,7 @@ This is simple chat web application named *Chatty*.
 
 # Online demo
 
-Demo version is deployed on Heroku and available under link: (https://tranquil-retreat-49438.herokuapp.com/) 
+Demo version is deployed on Heroku and available under link: https://tranquil-retreat-49438.herokuapp.com/ 
 
 # Architecture
 
