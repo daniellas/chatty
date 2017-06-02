@@ -10,9 +10,11 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
+    public static final String[] DESTINATION_PREFIXES = { "/topic", "/queue" };
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic");
+        registry.enableSimpleBroker(DESTINATION_PREFIXES);
         registry.setApplicationDestinationPrefixes("/app");
     }
 

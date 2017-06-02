@@ -1,10 +1,11 @@
 package dl.chatty.chat.broker;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.PathMatcher;
 
@@ -22,10 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SimpBroker implements Broker<Long, String, Principal> {
 
-    public static final String MESSAGES_TOPIC = "/topic/messages";
+    public static final String USER_DESTINATION_PREFIX = "/queue/messages/";
+
+    public static final String DESTINATION_PREFIX = "/user/queue/messages/";
+
     private static final String CHAT_ID_VARIABLE = "chatId";
-    private static final String USER_VARIABLE = "user";
-    public static final String DESTINATION_PATTERN = MESSAGES_TOPIC + "/{" + CHAT_ID_VARIABLE + "}/{" + USER_VARIABLE + "}";
+
+    public static final String DESTINATION_PATTERN = DESTINATION_PREFIX + "{" + CHAT_ID_VARIABLE + "}";
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -42,7 +46,7 @@ public class SimpBroker implements Broker<Long, String, Principal> {
     boolean asyncObservable = true;
 
     @Override
-    public void onSend(Long chatId, String message, Principal sender) {
+    public void onSend(Long chatId, String message, Principal sender, String sessionId) {
         Optional<Chat> guardedChat = messageSendGuard.messageChat(chatId, sender);
 
         Observable<Optional<Chat>> observable = Observable.just(guardedChat);
@@ -59,7 +63,7 @@ public class SimpBroker implements Broker<Long, String, Principal> {
     }
 
     @Override
-    public void onSubscribe(List<String> subscriptionIds, String destination, Principal user) {
+    public void onSubscribe(String destination, Principal user, String sessionId) {
         Observable.just(matchDestination(destination))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -67,35 +71,27 @@ public class SimpBroker implements Broker<Long, String, Principal> {
                     return Long.parseLong(variables.get(CHAT_ID_VARIABLE));
                 })
                 .doOnNext(chatId -> {
-                    log.info("User {} subscribed to chat {} with subscription ids {}", user.getName(), chatId, subscriptionIds);
-                })
-                .subscribe(chatId -> {
-                    subscriptionRegistry.create(chatId, user.getName(), subscriptionIds);
-
-                    String chatUserDestination = subscriptionRegistry.chatUserDestination(chatId, user.getName());
-
-                    messageRepository.findByChatIdOrderById(chatId).stream().forEach(msg -> {
-                        simpMessagingTemplate.convertAndSend(
-                                topicDestination(chatUserDestination),
-                                ChatMessage.of(msg.getId(), msg.getSender(), msg.getMessage(), msg.getSentTs()));
-                    });
+                    log.info("User {} subscribed to chat {} with session id {}", user.getName(), chatId, sessionId);
+                }).subscribe(chatId -> {
+                    subscriptionRegistry.create(chatId, user.getName(), sessionId);
+                    sendChatHistoryToUserSession(chatId, user.getName(), sessionId);
                 });
 
     }
 
     @Override
-    public void onUnsubscribe(List<String> subscriptionIds, Principal user) {
+    public void onUnsubscribe(Principal user, String sessionId) {
         Observable.just(user)
                 .doOnNext(u -> {
-                    log.info("User {} unsubscribed from {}", u.getName(), subscriptionIds);
+                    log.info("User {} unsubscribed from session {}", u.getName(), sessionId);
                 })
                 .subscribe(u -> {
-                    subscriptionRegistry.remove(u.getName(), subscriptionIds);
+                    subscriptionRegistry.remove(u.getName(), sessionId);
                 });
     }
 
     @Override
-    public void onDisconnect(Principal user) {
+    public void onDisconnect(Principal user, String sessionId) {
         Observable.just(user)
                 .doOnNext(u -> {
                     log.info("User {} disconnected", u.getName());
@@ -104,21 +100,34 @@ public class SimpBroker implements Broker<Long, String, Principal> {
                 });
     }
 
+    private void sendChatHistoryToUserSession(Long chatId, String user, String sessionId) {
+        SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+
+        accessor.setSessionId(sessionId);
+        accessor.setLeaveMutable(true);
+
+        messageRepository.findByChatIdOrderById(chatId).stream()
+                .forEachOrdered(msg -> {
+                    simpMessagingTemplate.convertAndSendToUser(
+                            user,
+                            userChatDestination(chatId),
+                            ChatMessage.of(msg.getId(), msg.getSender(), msg.getMessage(), msg.getSentTs()),
+                            accessor.getMessageHeaders());
+                });
+    }
+
     private void broadcast(Long chatId, Message message) {
-        subscriptionRegistry.chatDestinations(chatId).stream()
-                .forEach(destination -> {
-                    simpMessagingTemplate.convertAndSend(
-                            topicDestination(destination),
+        subscriptionRegistry.chatSubscriptions(chatId).stream()
+                .forEach(sub -> {
+                    simpMessagingTemplate.convertAndSendToUser(
+                            sub.getUser(),
+                            userChatDestination(chatId),
                             ChatMessage.of(
                                     message.getId(),
                                     message.getSender(),
                                     message.getMessage(),
                                     message.getSentTs()));
                 });
-    }
-
-    private String topicDestination(String destination) {
-        return MESSAGES_TOPIC + destination;
     }
 
     private Optional<Map<String, String>> matchDestination(String destination) {
@@ -135,4 +144,7 @@ public class SimpBroker implements Broker<Long, String, Principal> {
         return observable;
     }
 
+    private String userChatDestination(Long chatId) {
+        return USER_DESTINATION_PREFIX + chatId;
+    }
 }

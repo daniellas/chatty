@@ -4,8 +4,6 @@ import static dl.chatty.MessageTestUtil.*;
 import static org.mockito.Mockito.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +28,16 @@ public class ChatUnsubscribeEventListenerTest {
 
     @Test
     public void shouldCallBrokerOnEvent() {
-        List<String> nativeHeaders = new ArrayList<>();
-
         listener.onApplicationEvent(new SessionUnsubscribeEvent(
                 "source",
-                emptyByteMessage(subscriptionDestinationHeaders("destination", nativeHeaders)),
+                emptyByteMessage(destinationSessionHeaders("destination", "sid")),
                 principal));
 
-        verify(broker).onUnsubscribe(nativeHeaders, principal);
+        verify(broker).onUnsubscribe(principal, "sid");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldFailOnMissingSubscriptions() {
+    public void shouldFailOnMissingSession() {
         listener.onApplicationEvent(new SessionUnsubscribeEvent(
                 "source",
                 emptyByteMessage(destinationHeaders("destination")),

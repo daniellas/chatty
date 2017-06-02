@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dl.chatty.chat.entity.ChatSubscription;
 import dl.chatty.chat.repository.ChatSubscriptionRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,22 +16,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry<Long> {
 
-    private static final String SEPARATOR = "/";
-
     private final ChatSubscriptionRepository chatSubscriptionRepository;
 
     @Override
-    public void create(Long chatId, String user, Collection<String> subscriptionIds) {
-        if (chatSubscriptionRepository.findByChatAndUserAndSub(chatId, user, subscriptionIds.toString()) == null) {
-            chatSubscriptionRepository.save(ChatSubscription.of(null, user, chatId, subscriptionIds.toString()));
+    public void create(Long chatId, String user, String sessionId) {
+        if (chatSubscriptionRepository.findByChatAndUserAndSession(chatId, user, sessionId) == null) {
+            chatSubscriptionRepository.save(ChatSubscription.of(null, user, chatId, sessionId));
         } else {
-            log.warn("Subscription {}/{}/{} already exists, skipping creation", chatId, user, subscriptionIds);
+            log.warn("Subscription {}/{}/{} already exists, skipping creation", chatId, user, sessionId);
         }
     }
 
     @Override
-    public void remove(String user, Collection<String> subscriptionIds) {
-        chatSubscriptionRepository.deleteInBatch(chatSubscriptionRepository.findByUserAndSub(user, subscriptionIds.toString()));
+    public void remove(String user, String sessionId) {
+        chatSubscriptionRepository.deleteInBatch(chatSubscriptionRepository.findByUserAndSession(user, sessionId));
     }
 
     @Override
@@ -39,14 +38,16 @@ public class DefaultChatSubscriptionRegistry implements ChatSubscriptionRegistry
     }
 
     @Override
-    public Collection<String> chatDestinations(Long chatId) {
+    public Collection<Subscription> chatSubscriptions(Long chatId) {
         return chatSubscriptionRepository.findByChat(chatId).stream()
-                .map(s -> SEPARATOR + s.getChat() + SEPARATOR + s.getUser()).collect(Collectors.toList());
+                .map(s -> RegistryChatSubscription.of(s.getUser(), s.getSession()))
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public String chatUserDestination(Long chatId, String user) {
-        return SEPARATOR + chatId + SEPARATOR + user;
+    @Data
+    @RequiredArgsConstructor(staticName = "of")
+    static class RegistryChatSubscription implements Subscription {
+        private final String user;
+        private final String sessionId;
     }
-
 }

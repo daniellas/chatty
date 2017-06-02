@@ -29,10 +29,10 @@ public class ChatDisconnectEventListenerTest {
     public void shouldCallBrokerOnEvent() {
         listener.onApplicationEvent(new SessionDisconnectEvent(
                 "source",
-                MessageTestUtil.emptyByteMessage(),
+                MessageTestUtil.emptyByteMessage(MessageTestUtil.sessionHeaders("sid")),
                 "id",
                 CloseStatus.NORMAL));
-        verify(broker).onDisconnect(any());
+        verify(broker).onDisconnect(any(), any());
     }
 
 }

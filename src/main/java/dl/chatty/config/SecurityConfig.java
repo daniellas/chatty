@@ -59,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configureLoginFilter(http);
         configureLogout(http);
         configureCsrf(http);
+        configureSession(http);
     }
 
     private void configureReuestsSecurity(HttpSecurity http) throws Exception {
@@ -85,6 +86,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private void configureCsrf(HttpSecurity http) throws Exception {
         // TODO Enable and support on UI side
         http.csrf().disable();
+    }
+
+    private void configureSession(HttpSecurity http) throws Exception {
+        http.sessionManagement().maximumSessions(1);
     }
 
     @Bean

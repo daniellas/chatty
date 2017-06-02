@@ -3,7 +3,7 @@ package dl.chatty.chat.broker;
 import java.util.Collection;
 
 /**
- * Chat subscriptions registry 
+ * Chat subscriptions registry
  * 
  * @author Daniel Łaś
  *
@@ -20,7 +20,7 @@ public interface ChatSubscriptionRegistry<I> {
      * @param user
      * @param subscriptionIds
      */
-    void create(I chatId, String user, Collection<String> subscriptionIds);
+    void create(I chatId, String user, String sessionId);
 
     /**
      * Removes subscriptions for given user and subscription identifiers
@@ -28,7 +28,7 @@ public interface ChatSubscriptionRegistry<I> {
      * @param user
      * @param subscriptionIds
      */
-    void remove(String user, Collection<String> subscriptionIds);
+    void remove(String user, String sessionId);
 
     /**
      * Removes all subscriptions for given user
@@ -44,14 +44,12 @@ public interface ChatSubscriptionRegistry<I> {
      * @param chatId
      * @return all chat destinations
      */
-    Collection<String> chatDestinations(I chatId);
+    Collection<Subscription> chatSubscriptions(I chatId);
 
-    /**
-     * Returns single personal destination for given user and chat identifier
-     * 
-     * @param chatId
-     * @param user
-     * @return chat destination
-     */
-    String chatUserDestination(I chatId, String user);
+    public interface Subscription {
+        String getUser();
+
+        String getSessionId();
+    }
+
 }

@@ -1,7 +1,5 @@
 package dl.chatty.chat.broker;
 
-import java.util.List;
-
 /**
  * Chat broker responsible for message sending, chat subscriptions and
  * connections management
@@ -24,7 +22,7 @@ public interface Broker<I, M, P> {
      * @param message
      * @param sender
      */
-    public void onSend(I chatId, M message, P sender);
+    public void onSend(I chatId, M message, P sender, String sessionId);
 
     /**
      * Processes new chat subscription
@@ -33,7 +31,7 @@ public interface Broker<I, M, P> {
      * @param destination
      * @param user
      */
-    public void onSubscribe(List<String> subscriptionIds, String destination, P user);
+    public void onSubscribe(String destination, P user, String sessionId);
 
     /**
      * Processes chat unsubscribe operation
@@ -41,13 +39,13 @@ public interface Broker<I, M, P> {
      * @param subscriptionIds
      * @param user
      */
-    public void onUnsubscribe(List<String> subscriptionIds, P user);
+    public void onUnsubscribe(P user, String sessionId);
 
     /**
      * Processes user disconnection
      * 
      * @param user
      */
-    public void onDisconnect(P user);
+    public void onDisconnect(P user, String sessionId);
 
 }

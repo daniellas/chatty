@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "user", "chat", "sub" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "user", "chat", "session" }))
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Data
@@ -30,5 +30,5 @@ public class ChatSubscription {
     @Column(nullable = false)
     private Long chat;
 
-    private String sub;
+    private String session;
 }

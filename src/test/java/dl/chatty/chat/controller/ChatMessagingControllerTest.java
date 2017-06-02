@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import dl.chatty.MessageTestUtil;
 import dl.chatty.chat.broker.Broker;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -22,8 +23,8 @@ public class ChatMessagingControllerTest {
 
     @Test
     public void shouldSendMessage() {
-        controller.handleMessage("msg", 1l, null);
+        controller.handleMessage("msg", 1l, null, MessageTestUtil.emptyByteMessage(MessageTestUtil.sessionHeaders("sid")));
 
-        Mockito.verify(broker).onSend(1l, "msg", null);
+        Mockito.verify(broker).onSend(1l, "msg", null, "sid");
     }
 }

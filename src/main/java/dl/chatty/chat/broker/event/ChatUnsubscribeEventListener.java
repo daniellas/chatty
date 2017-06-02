@@ -16,7 +16,9 @@ public class ChatUnsubscribeEventListener implements ApplicationListener<Session
 
     @Override
     public void onApplicationEvent(SessionUnsubscribeEvent event) {
-        broker.onUnsubscribe(StompHeadersUtil.subscriptionIds(event.getMessage().getHeaders()), event.getUser());
+        broker.onUnsubscribe(
+                event.getUser(),
+                StompHeadersUtil.sessionId(event.getMessage()));
     }
 
 }

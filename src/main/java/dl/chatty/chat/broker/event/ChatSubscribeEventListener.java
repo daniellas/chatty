@@ -17,9 +17,9 @@ public class ChatSubscribeEventListener implements ApplicationListener<SessionSu
     @Override
     public void onApplicationEvent(SessionSubscribeEvent event) {
         broker.onSubscribe(
-                StompHeadersUtil.subscriptionIds(event.getMessage().getHeaders()),
-                StompHeadersUtil.destination(event.getMessage().getHeaders()),
-                event.getUser());
+                StompHeadersUtil.destination(event.getMessage()),
+                event.getUser(),
+                StompHeadersUtil.sessionId(event.getMessage()));
     }
 
 }
