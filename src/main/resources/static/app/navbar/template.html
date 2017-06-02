@@ -7,9 +7,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+            <a class="navbar-brand" href="" ui-sref="chat/list">
+                <i class="fa fa-comment text-success"></i>
+            </a>
         </div>
         <div class="collapse navbar-collapse" uib-collapse="collapse">
-            <p class="navbar-text">Signed in as <strong>{{userDetails.username}}</strong></p>
+            <p class="navbar-text">
+                Signed in as <strong>{{userDetails.username}}</strong>
+            </p>
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="" ng-click="logout()">
