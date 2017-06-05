@@ -112,6 +112,7 @@ public class SimpBroker implements Broker<Long, String, Principal> {
                 .map(m -> ChatMessage.of(m.getId(), m.getSender(), m.getMessage(), m.getSentTs()))
                 .collect(Collectors.toList());
 
+        log.info("Sending chat history length {} to subscribed user {} in session{}", messages.size(), user, sessionId);
         simpMessagingTemplate.convertAndSendToUser(user, userChatDestination(chatId), messages, accessor.getMessageHeaders());
     }
 
