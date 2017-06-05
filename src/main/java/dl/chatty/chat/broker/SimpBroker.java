@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.PathMatcher;
 
 import dl.chatty.chat.entity.Chat;
@@ -21,6 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class SimpBroker implements Broker<Long, String, Principal> {
@@ -112,7 +114,6 @@ public class SimpBroker implements Broker<Long, String, Principal> {
                 .map(m -> ChatMessage.of(m.getId(), m.getSender(), m.getMessage(), m.getSentTs()))
                 .collect(Collectors.toList());
 
-        log.info("Sending chat history length {} to subscribed user {} in session{}", messages.size(), user, sessionId);
         simpMessagingTemplate.convertAndSendToUser(user, userChatDestination(chatId), messages, accessor.getMessageHeaders());
     }
 
